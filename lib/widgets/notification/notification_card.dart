@@ -1,4 +1,3 @@
-import 'package:files_manager/theme/color.dart';
 import 'package:flutter/material.dart';
 import 'package:files_manager/generated/l10n.dart';
 import 'package:files_manager/models/notification_model.dart';

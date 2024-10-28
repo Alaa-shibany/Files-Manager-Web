@@ -65,14 +65,14 @@ class CustomFormTextField extends StatelessWidget {
                 decoration: InputDecoration(
                   hintText: hintText,
                   hintStyle: const TextStyle(
-                      color: Colors.white54, fontWeight: FontWeight.bold),
+                      color: Colors.black12, fontWeight: FontWeight.bold),
                   // labelText: nameLabel,
                   labelStyle: styleInput ??
                       const TextStyle(
                           color: Colors.grey, fontWeight: FontWeight.bold),
                   filled: true,
                   fillColor: fillColor,
-
+                  hoverColor: const Color.fromARGB(255, 231, 231, 231),
                   suffixIcon: icon != null
                       ? IconButton(
                           icon: Icon(icon, color: colorIcon),
@@ -113,7 +113,7 @@ class CustomFormTextField extends StatelessWidget {
                 decoration: InputDecoration(
                   hintText: hintText,
                   hintStyle: const TextStyle(
-                      color: Colors.white54, fontWeight: FontWeight.bold),
+                      color: Colors.black12, fontWeight: FontWeight.bold),
                   labelText: nameLabel,
                   labelStyle: styleInput ??
                       const TextStyle(
@@ -141,6 +141,7 @@ class CustomFormTextField extends StatelessWidget {
                     borderRadius: BorderRadius.circular(borderRadius),
                     borderSide: BorderSide(color: borderColor),
                   ),
+                  hoverColor: const Color.fromARGB(255, 231, 231, 231),
                 ),
                 validator: validator,
                 onChanged: onChanged,

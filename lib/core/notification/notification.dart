@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:files_manager/main.dart';
 
-import '../shared/local_network.dart';
+// import '../shared/local_network.dart';
 
 Future<void> handleBackgroundMessage(RemoteMessage message) async {
   await showNotification(message);
@@ -88,7 +88,7 @@ Future<String> downloadAndSaveImage(String url) async {
 Future<void> handleMessageOnOpen(RemoteMessage? message) async {
   if (message == null) return;
 
-  final screenKey = message.data['screen_key'];
+  // final screenKey = message.data['screen_key'];
 
   // Call navigateToScreen with the cubit
   // ScreenNavigator.navigateToScreen(
@@ -157,6 +157,7 @@ class FirebaseApi {
 
   Future<void> initNotification() async {
     try {
+      // FirebaseMessaging.instance.setAutoInitEnabled(true);
       await firebaseMessaging.requestPermission(
         alert: true,
         badge: true,
@@ -165,23 +166,6 @@ class FirebaseApi {
         provisional: false,
         criticalAlert: false,
       );
-      String? role = CashNetwork.getCashData(key: 'role');
-      print('the role is $role');
-      firebaseMessaging.subscribeToTopic('mosh_task_topic');
-      if (role.isEmpty) {
-        print('the role is empty no subscribe');
-      } else if (role == 'admin') {
-        firebaseMessaging.subscribeToTopic('mosh_admins_topic');
-        firebaseMessaging.unsubscribeFromTopic('mosh_users_topic');
-      } else if (role == 'user') {
-        firebaseMessaging.subscribeToTopic('mosh_users_topic');
-        firebaseMessaging.unsubscribeFromTopic('mosh_admins_topic');
-      }
-
-      // String? fcmToken = await firebaseMessaging.getToken();
-      // final String serverKey = await getAccessToken();
-      // print(
-      //     'The server key is ===========================================>\n $serverKey');
       await FirebaseMessaging.instance
           .setForegroundNotificationPresentationOptions(
         alert: true,

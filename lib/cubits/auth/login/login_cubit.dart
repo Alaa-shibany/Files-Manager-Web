@@ -16,7 +16,10 @@ class LoginCubit extends Cubit<LoginState> {
   LoginCubit() : super(LoginInitial());
 
   bool showPassword = false;
-  final firebaseMessaging = FirebaseMessaging.instance;
+  // final firebaseMessaging = FirebaseMessaging.instance;
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
 
   Future<void> login({
     required String email,
@@ -32,14 +35,14 @@ class LoginCubit extends Cubit<LoginState> {
       }
       emit(LoginLoading());
       print('The fcm token we will send to back => ${fcmToken.toString()}');
-      await FirebaseMessaging.instance.deleteToken().then(
-        (value) async {
-          firebaseMessaging.subscribeToTopic('mosh_task_topic');
-          fcmToken = await firebaseMessaging.getToken();
-          await CashNetwork.insertToCash(
-              key: 'fcm_token', value: fcmToken.toString());
-        },
-      );
+      // await FirebaseMessaging.instance.deleteToken().then(
+      //   (value) async {
+      //     firebaseMessaging.subscribeToTopic('mosh_task_topic');
+      //     fcmToken = await firebaseMessaging.getToken();
+      //     await CashNetwork.insertToCash(
+      //         key: 'fcm_token', value: fcmToken.toString());
+      //   },
+      // );
       print('The fcm token is => $fcmToken');
       final response = await dio().post('auth/login', data: {
         'email': email,
@@ -68,12 +71,12 @@ class LoginCubit extends Cubit<LoginState> {
             response.data['user']['role'].isEmpty) {
           print('the role is empty no subscribe');
         } else if (response.data['user']['role'] == 'admin') {
-          firebaseMessaging.subscribeToTopic('mosh_admins_topic');
-          firebaseMessaging.unsubscribeFromTopic('mosh_users_topic');
+          // firebaseMessaging.subscribeToTopic('mosh_admins_topic');
+          // firebaseMessaging.unsubscribeFromTopic('mosh_users_topic');
           print('admin subscribe');
         } else if (response.data['user']['role'] == 'user') {
-          firebaseMessaging.subscribeToTopic('mosh_users_topic');
-          firebaseMessaging.unsubscribeFromTopic('mosh_admins_topic');
+          // firebaseMessaging.subscribeToTopic('mosh_users_topic');
+          // firebaseMessaging.unsubscribeFromTopic('mosh_admins_topic');
           print('user subscribe');
         }
         await CashNetwork.insertToCash(
