@@ -49,6 +49,11 @@ class FolderModel extends Application {
   }
 
   @override
+  int getApplicationFilesCount() {
+    return allFiles.length;
+  }
+
+  @override
   bool isFolder() {
     return true;
   }

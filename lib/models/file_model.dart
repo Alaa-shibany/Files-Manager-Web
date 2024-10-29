@@ -1,3 +1,4 @@
+import 'package:files_manager/models/member_model.dart';
 import 'package:flutter/material.dart';
 import 'package:files_manager/cubits/all_boards_cubit/all_boards_cubit.dart';
 import 'package:files_manager/cubits/application_cubit/application_cubit.dart';
@@ -13,6 +14,7 @@ class FileModel extends Application {
   List<TaskModel> tasks = [];
   IconData icon = Icons.file_copy;
   int? applicationColor;
+  Member? member;
   FileModel({
     required this.id,
     required this.boardId,
@@ -45,6 +47,11 @@ class FileModel extends Application {
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),
     );
+  }
+
+  @override
+  Member? getApplicationOwner() {
+    return member;
   }
 
   @override

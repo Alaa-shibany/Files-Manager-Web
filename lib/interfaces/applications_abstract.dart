@@ -3,6 +3,8 @@ import 'package:files_manager/cubits/all_boards_cubit/all_boards_cubit.dart';
 import 'package:files_manager/cubits/application_cubit/application_cubit.dart';
 import 'package:files_manager/cubits/board_cubit/board_cubit.dart';
 
+import '../models/member_model.dart';
+
 abstract class Application {
   IconData getIcon() {
     return Icons.category;
@@ -10,6 +12,18 @@ abstract class Application {
 
   String getApplicationName() {
     return 'application';
+  }
+
+  DateTime getApplicationCreateDate() {
+    return DateTime.now();
+  }
+
+  int getApplicationFilesCount() {
+    return 0;
+  }
+
+  Member? getApplicationOwner() {
+    return null;
   }
 
   bool isFolder() {

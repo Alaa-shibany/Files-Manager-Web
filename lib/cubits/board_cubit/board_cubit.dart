@@ -3,12 +3,16 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/dio.dart' as Dio;
+import 'package:files_manager/models/member_model.dart';
 import 'package:flutter/material.dart';
 import 'package:files_manager/core/functions/apis_error_handler.dart';
 import 'package:files_manager/core/server/dio_settings.dart';
 import 'package:files_manager/core/shared/local_network.dart';
 import 'package:files_manager/interfaces/applications_abstract.dart';
 import 'package:files_manager/models/board_model.dart';
+
+import '../../models/file_model.dart';
+import '../../models/user_model.dart';
 
 part 'board_state.dart';
 
@@ -39,6 +43,29 @@ class BoardCubit extends Cubit<BoardState> {
   // }
 
   Future<void> refresh() async {
+    emit(BoardInitial());
+  }
+
+  Future<void> checkIn({required FileModel file}) async {
+    file.member = Member(
+        id: 1,
+        country: Country(id: 1, name: 'damascus', iso3: '+963', code: '123'),
+        language: Language(id: 1, name: 'english', code: 'en', direction: 'lr'),
+        gender: Gender(id: 1, type: 'male'),
+        firstName: 'Alaa',
+        lastName: 'Shibany',
+        mainRole: 'admin',
+        role: 'admin',
+        dateOfBirth: '2002-11-28',
+        countryCode: '+963',
+        phone: '981233473',
+        email: 'alaashibany@gmail.com',
+        image: '');
+    emit(BoardInitial());
+  }
+
+  Future<void> checkOut({required FileModel file}) async {
+    file.member = null;
     emit(BoardInitial());
   }
 

@@ -1,4 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:files_manager/models/file_model.dart';
+import 'package:files_manager/models/folder_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,6 +12,7 @@ import 'package:files_manager/core/shared/local_network.dart';
 import 'package:files_manager/cubits/all_boards_cubit/all_boards_cubit.dart';
 import 'package:files_manager/cubits/application_cubit/application_cubit.dart';
 import 'package:files_manager/cubits/board_cubit/board_cubit.dart';
+import 'package:intl/intl.dart';
 
 import 'package:shimmer/shimmer.dart';
 
@@ -111,9 +114,33 @@ class ShowApplicationsData extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                              title: Text(boardCubit
-                                  .currentBoard.allFiles[index]
-                                  .getApplicationName()),
+                              title: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  SizedBox(
+                                    width: Statics.isPlatformDesktop
+                                        ? mediaQuery.width / 2.5
+                                        : mediaQuery.width / 1.5,
+                                    child: Text(boardCubit
+                                        .currentBoard.allFiles[index]
+                                        .getApplicationName()),
+                                  ),
+                                  Statics.isPlatformDesktop
+                                      ? Text(
+                                          DateFormat('yyyy-MM-d HH:mm:ss')
+                                              .format(boardCubit
+                                                  .currentBoard.allFiles[index]
+                                                  .getApplicationCreateDate()),
+                                          style:
+                                              TextStyle(color: Colors.black38),
+                                        )
+                                      : const SizedBox()
+                                ],
+                              ),
+                              subtitle: Text(
+                                'Count of file ${boardCubit.currentBoard.allFiles[index].getApplicationFilesCount()}',
+                                style: TextStyle(color: Colors.black26),
+                              ),
                             ),
                           ).animate().fade(
                               duration: const Duration(milliseconds: 500),
@@ -124,14 +151,41 @@ class ShowApplicationsData extends StatelessWidget {
                               leading: Icon(boardCubit
                                   .currentBoard.allFiles[index]
                                   .getIcon()),
-                              subtitle: Text(
-                                'Free for editing',
-                                style: TextStyle(color: Colors.green),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  boardCubit.currentBoard.allFiles[index]
+                                              .getApplicationOwner() !=
+                                          null
+                                      ? Text('Booked by',
+                                          style: TextStyle(color: Colors.red))
+                                      : Text(
+                                          'Free for editing',
+                                          style: TextStyle(color: Colors.green),
+                                        ),
+                                  boardCubit.currentBoard.allFiles[index]
+                                              .getApplicationOwner() !=
+                                          null
+                                      ? memberWidget(
+                                          member: boardCubit
+                                              .currentBoard.allFiles[index]
+                                              .getApplicationOwner()!,
+                                          mediaQuery: mediaQuery)
+                                      : const SizedBox()
+                                ],
                               ),
                               trailing: PopupMenuButton(
                                 icon: const Icon(Icons.more_vert),
-                                onSelected: (value) {
-                                  if (value == 'settings') {
+                                onSelected: (value) async {
+                                  if (value == 'checkout') {
+                                    await boardCubit.checkOut(
+                                        file: boardCubit.currentBoard
+                                            .allFiles[index] as FileModel);
+                                  } else if (value == 'checkIn') {
+                                    await boardCubit.checkIn(
+                                        file: boardCubit.currentBoard
+                                            .allFiles[index] as FileModel);
                                   } else if (value == 'share') {
                                     print('Share');
                                     // share();
@@ -139,11 +193,25 @@ class ShowApplicationsData extends StatelessWidget {
                                 },
                                 itemBuilder: (context) => [
                                   PopupMenuItem(
-                                    value: 'checkIn',
+                                    value: boardCubit
+                                                .currentBoard.allFiles[index]
+                                                .getApplicationOwner() !=
+                                            null
+                                        ? 'checkout'
+                                        : 'checkIn',
                                     child: ListTile(
-                                      leading: const Icon(
-                                          Icons.check_circle_rounded),
-                                      title: Text('Check in'),
+                                      leading: Icon(boardCubit
+                                                  .currentBoard.allFiles[index]
+                                                  .getApplicationOwner() !=
+                                              null
+                                          ? Icons.done_all
+                                          : Icons.check_circle_rounded),
+                                      title: boardCubit
+                                                  .currentBoard.allFiles[index]
+                                                  .getApplicationOwner() !=
+                                              null
+                                          ? Text('Check out')
+                                          : Text('Check in'),
                                     ),
                                   ),
                                   PopupMenuItem(
@@ -162,9 +230,28 @@ class ShowApplicationsData extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                              title: Text(boardCubit
-                                  .currentBoard.allFiles[index]
-                                  .getApplicationName()),
+                              title: Row(
+                                children: [
+                                  SizedBox(
+                                    width: Statics.isPlatformDesktop
+                                        ? mediaQuery.width / 2.5
+                                        : mediaQuery.width / 1.5,
+                                    child: Text(boardCubit
+                                        .currentBoard.allFiles[index]
+                                        .getApplicationName()),
+                                  ),
+                                  Statics.isPlatformDesktop
+                                      ? Text(
+                                          DateFormat('yyyy-MM-d HH:mm:ss')
+                                              .format(boardCubit
+                                                  .currentBoard.allFiles[index]
+                                                  .getApplicationCreateDate()),
+                                          style:
+                                              TextStyle(color: Colors.black38),
+                                        )
+                                      : const SizedBox()
+                                ],
+                              ),
                             ),
                           ).animate().fade(
                               duration: const Duration(milliseconds: 500),
@@ -185,11 +272,11 @@ class ShowApplicationsData extends StatelessWidget {
             ? Container(
                 padding: EdgeInsets.symmetric(
                   horizontal: Statics.isPlatformDesktop
-                      ? mediaQuery.width / 120
-                      : mediaQuery.width / 30,
+                      ? mediaQuery.width / 150
+                      : mediaQuery.width / 50,
                   vertical: Statics.isPlatformDesktop
-                      ? mediaQuery.width / 80
-                      : mediaQuery.height / 40,
+                      ? mediaQuery.width / 100
+                      : mediaQuery.height / 60,
                 ),
                 decoration: const BoxDecoration(
                   shape: BoxShape.circle,
@@ -201,8 +288,8 @@ class ShowApplicationsData extends StatelessWidget {
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                       fontSize: Statics.isPlatformDesktop
-                          ? mediaQuery.width / 80
-                          : mediaQuery.width / 20),
+                          ? mediaQuery.width / 90
+                          : mediaQuery.width / 40),
                 ),
               )
             : ClipOval(
@@ -229,8 +316,8 @@ class ShowApplicationsData extends StatelessWidget {
             right: -mediaQuery.width / 90,
             child: Container(
               padding: EdgeInsets.symmetric(
-                  horizontal: mediaQuery.width / 120,
-                  vertical: mediaQuery.height / 130),
+                  horizontal: mediaQuery.width / 170,
+                  vertical: mediaQuery.height / 150),
               decoration: const BoxDecoration(
                 color: AppColors.primaryColor,
                 shape: BoxShape.circle,
@@ -239,8 +326,8 @@ class ShowApplicationsData extends StatelessWidget {
                 Icons.star,
                 color: Colors.white,
                 size: Statics.isPlatformDesktop
-                    ? mediaQuery.width / 120
-                    : mediaQuery.width / 30,
+                    ? mediaQuery.width / 150
+                    : mediaQuery.width / 40,
               ),
             ),
           ),

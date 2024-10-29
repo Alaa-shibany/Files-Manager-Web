@@ -33,7 +33,7 @@ class AddBoardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final boardCubit = context.read<BoardCubit>();
     final mediaQuery = MediaQuery.of(context).size;
-    final addBoardCubit = context.read<AddBoardCubit>();
+    // final addBoardCubit = context.read<AddBoardCubit>();
 
     final applicationCubit = context.read<ApplicationCubit>();
     print(
