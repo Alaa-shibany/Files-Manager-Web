@@ -125,32 +125,24 @@ class AddBoardScreen extends StatelessWidget {
                                 tooltip: S.of(context).add_application,
                                 icon: const Icon(Icons.add),
                                 onPressed: () async {
-                                  boardCubit.selectedTap == 0
-                                      ? Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                MultiBlocProvider(
-                                              providers: [
-                                                BlocProvider(
-                                                  create: (context) =>
-                                                      BoardAddApplicationCubit(),
-                                                ),
-                                              ],
-                                              child: AllApplicationsScreen(
-                                                applicationCubit:
-                                                    applicationCubit,
-                                                boardCubit: boardCubit,
-                                                allBoardsCubit: allBoardsCubit,
-                                                uuid: uuid,
-                                              ),
-                                            ),
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => MultiBlocProvider(
+                                        providers: [
+                                          BlocProvider(
+                                            create: (context) =>
+                                                BoardAddApplicationCubit(),
                                           ),
-                                        )
-                                      : await addBoardCubit.addSubBoard(
-                                          parentBoard: boardCubit.currentBoard,
-                                          context: context,
-                                          parentId: boardCubit.currentBoard.id
-                                              .toString());
+                                        ],
+                                        child: AllApplicationsScreen(
+                                          applicationCubit: applicationCubit,
+                                          boardCubit: boardCubit,
+                                          allBoardsCubit: allBoardsCubit,
+                                          uuid: uuid,
+                                        ),
+                                      ),
+                                    ),
+                                  );
                                 },
                               ),
                               IconButton(

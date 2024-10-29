@@ -1,3 +1,5 @@
+import 'package:files_manager/models/file_model.dart';
+import 'package:files_manager/models/folder_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:files_manager/core/animation/dialogs/dialogs.dart';
@@ -8,6 +10,8 @@ import 'package:files_manager/cubits/board_cubit/board_cubit.dart';
 import 'package:files_manager/generated/l10n.dart';
 import 'package:files_manager/theme/color.dart';
 import 'package:files_manager/widgets/all_applications_screen/application_widget.dart';
+import 'package:file_picker/file_picker.dart';
+import '../../core/functions/statics.dart';
 
 class AllApplicationsScreen extends StatelessWidget {
   const AllApplicationsScreen({
@@ -24,7 +28,7 @@ class AllApplicationsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context).size;
-    final boardAddApplicationCubit = context.read<BoardAddApplicationCubit>();
+    // final boardAddApplicationCubit = context.read<BoardAddApplicationCubit>();
     return Scaffold(
       backgroundColor: AppColors.dark,
       extendBodyBehindAppBar: true,
@@ -53,14 +57,18 @@ class AllApplicationsScreen extends StatelessWidget {
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
-              fontSize: mediaQuery.width / 18,
+              fontSize: Statics.isPlatformDesktop
+                  ? mediaQuery.width / 55
+                  : mediaQuery.width / 18,
             ),
           ),
           Text(
             S.of(context).click_on_the_app_to_add_it_to_the_board,
             style: TextStyle(
               color: Colors.white30,
-              fontSize: mediaQuery.width / 25,
+              fontSize: Statics.isPlatformDesktop
+                  ? mediaQuery.width / 75
+                  : mediaQuery.width / 25,
             ),
           ),
           SizedBox(
@@ -89,8 +97,27 @@ class AllApplicationsScreen extends StatelessWidget {
                     context: context,
                     asset: 'assets/images/todo-hover.jpg',
                     onTap: () async {
-                      await boardAddApplicationCubit.addApplicationFunction(
-                          context: context, uuid: uuid, appId: 1);
+                      FilePickerResult? result =
+                          await FilePicker.platform.pickFiles();
+
+                      if (result != null) {
+                        boardCubit.currentBoard.allFiles.add(FileModel(
+                            id: boardCubit.currentBoard.allFiles.isEmpty
+                                ? 1
+                                : boardCubit.currentBoard.allFiles.last
+                                        .getApplicationId() +
+                                    1,
+                            boardId: boardCubit.currentBoard.id,
+                            title: 'New file',
+                            mode: 'free',
+                            createdAt: DateTime.now(),
+                            updatedAt: DateTime.now()));
+                        await boardCubit.refresh();
+                        await allBoardsCubit.refresh();
+                        Navigator.pop(context);
+                      } else {
+                        // User canceled the picker
+                      }
                     },
                     title: 'New File',
                   ),
@@ -99,24 +126,23 @@ class AllApplicationsScreen extends StatelessWidget {
                       context: context,
                       asset: 'assets/images/chat-hover.jpg',
                       onTap: () async {
-                        await boardAddApplicationCubit.addApplicationFunction(
-                            context: context, uuid: uuid, appId: 2);
-                        print('Chat Added in Application');
+                        boardCubit.currentBoard.allFiles.add(FolderModel(
+                            id: boardCubit.currentBoard.allFiles.isEmpty
+                                ? 1
+                                : boardCubit.currentBoard.allFiles.last
+                                        .getApplicationId() +
+                                    1,
+                            boardId: boardCubit.currentBoard.id,
+                            allFiles: [],
+                            title: 'New folder',
+                            mode: 'free',
+                            createdAt: DateTime.now(),
+                            updatedAt: DateTime.now()));
+                        await boardCubit.refresh();
+                        await allBoardsCubit.refresh();
+                        Navigator.pop(context);
                       },
                       title: 'New Folder'),
-
-                  // application(
-                  //     onTap: () {
-                  //       Navigator.pop(context);
-                  //       boardCubit.addApplication(NotesModel(
-                  //           applicationName: 'Note application',
-                  //           boardCubit: boardCubit));
-                  //       print('Notes');
-                  //     },
-                  //     mediaQuery: mediaQuery,
-                  //     context: context,
-                  //     asset: 'assets/images/notes-hover.jpg',
-                  //     title: 'ملاحظات'),
                 ],
               );
             },

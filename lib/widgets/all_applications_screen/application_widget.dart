@@ -1,3 +1,4 @@
+import 'package:files_manager/core/functions/statics.dart';
 import 'package:flutter/material.dart';
 
 class ApplicationWidget extends StatelessWidget {
@@ -18,9 +19,13 @@ class ApplicationWidget extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: mediaQuery.width / 2.3,
+        width: Statics.isPlatformDesktop
+            ? mediaQuery.width / 5
+            : mediaQuery.width / 2.3,
         margin: EdgeInsets.symmetric(
-            horizontal: mediaQuery.width / 90,
+            horizontal: Statics.isPlatformDesktop
+                ? mediaQuery.width / 150
+                : mediaQuery.width / 90,
             vertical: mediaQuery.height / 120),
         child: Column(
           children: [
