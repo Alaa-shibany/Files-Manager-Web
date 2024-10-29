@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:files_manager/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,6 +13,7 @@ import 'package:files_manager/cubits/board_cubit/board_cubit.dart';
 
 import 'package:shimmer/shimmer.dart';
 
+import '../../core/functions/statics.dart';
 import '../../models/member_model.dart';
 import '../../theme/color.dart';
 
@@ -77,165 +77,100 @@ class ShowApplicationsData extends StatelessWidget {
                 applicationCubit.refreshData();
               },
               child: ListView(
-                children: [
-                  Card(
-                    color: Colors.white,
-                    child: ListTile(
-                      leading: Icon(Icons.file_copy),
-                      subtitle: Text(
-                        'Free for editing',
-                        style: TextStyle(color: Colors.green),
-                      ),
-                      trailing: PopupMenuButton(
-                        icon: const Icon(Icons.more_vert),
-                        onSelected: (value) {
-                          if (value == 'settings') {
-                          } else if (value == 'share') {
-                            print('Share');
-                            // share();
-                          }
-                        },
-                        itemBuilder: (context) => [
-                          PopupMenuItem(
-                            value: 'checkIn',
+                children: List.generate(
+                  boardCubit.currentBoard.allFiles.length,
+                  (index) {
+                    return boardCubit.currentBoard.allFiles[index].isFolder()
+                        ? Card(
+                            color: Colors.white,
                             child: ListTile(
-                              leading: const Icon(Icons.check_circle_rounded),
-                              title: Text('Check in'),
+                              leading: Icon(Icons.folder),
+                              trailing: PopupMenuButton(
+                                icon: const Icon(Icons.more_vert),
+                                onSelected: (value) {
+                                  if (value == 'settings') {
+                                  } else if (value == 'share') {
+                                    print('Share');
+                                    // share();
+                                  }
+                                },
+                                itemBuilder: (context) => [
+                                  PopupMenuItem(
+                                    value: 'share',
+                                    child: ListTile(
+                                      leading: const Icon(Icons.link),
+                                      title: Text('Share'),
+                                    ),
+                                  ),
+                                  PopupMenuItem(
+                                    value: 'copy',
+                                    child: ListTile(
+                                      leading: const Icon(Icons.copy),
+                                      title: Text('Copy'),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              title: Text(boardCubit
+                                  .currentBoard.allFiles[index]
+                                  .getApplicationName()),
                             ),
-                          ),
-                          PopupMenuItem(
-                            value: 'share',
+                          ).animate().fade(
+                              duration: const Duration(milliseconds: 500),
+                            )
+                        : Card(
+                            color: Colors.white,
                             child: ListTile(
-                              leading: const Icon(Icons.link),
-                              title: Text('Share'),
+                              leading: Icon(boardCubit
+                                  .currentBoard.allFiles[index]
+                                  .getIcon()),
+                              subtitle: Text(
+                                'Free for editing',
+                                style: TextStyle(color: Colors.green),
+                              ),
+                              trailing: PopupMenuButton(
+                                icon: const Icon(Icons.more_vert),
+                                onSelected: (value) {
+                                  if (value == 'settings') {
+                                  } else if (value == 'share') {
+                                    print('Share');
+                                    // share();
+                                  }
+                                },
+                                itemBuilder: (context) => [
+                                  PopupMenuItem(
+                                    value: 'checkIn',
+                                    child: ListTile(
+                                      leading: const Icon(
+                                          Icons.check_circle_rounded),
+                                      title: Text('Check in'),
+                                    ),
+                                  ),
+                                  PopupMenuItem(
+                                    value: 'share',
+                                    child: ListTile(
+                                      leading: const Icon(Icons.link),
+                                      title: Text('Share'),
+                                    ),
+                                  ),
+                                  PopupMenuItem(
+                                    value: 'copy',
+                                    child: ListTile(
+                                      leading: const Icon(Icons.copy),
+                                      title: Text('Copy'),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              title: Text(boardCubit
+                                  .currentBoard.allFiles[index]
+                                  .getApplicationName()),
                             ),
-                          ),
-                          PopupMenuItem(
-                            value: 'copy',
-                            child: ListTile(
-                              leading: const Icon(Icons.copy),
-                              title: Text('Copy'),
-                            ),
-                          ),
-                        ],
-                      ),
-                      title: Text('First File'),
-                    ),
-                  ).animate().fade(
-                        duration: const Duration(milliseconds: 500),
-                      ),
-                  Card(
-                    color: Colors.white,
-                    child: ListTile(
-                      leading: Icon(Icons.file_copy),
-                      subtitle: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Locked by Alaa Shibany',
-                            style: TextStyle(color: Colors.red),
-                          ),
-                          memberWidget(
-                              member: Member(
-                                  id: 1,
-                                  country: Country(
-                                      id: 1,
-                                      name: 'damascus',
-                                      iso3: '+963',
-                                      code: '123'),
-                                  language: Language(
-                                      id: 1,
-                                      name: 'english',
-                                      code: 'en',
-                                      direction: 'lr'),
-                                  gender: Gender(id: 1, type: 'male'),
-                                  firstName: 'Alaa',
-                                  lastName: 'Shibany',
-                                  mainRole: 'admin',
-                                  role: 'admin',
-                                  dateOfBirth: '2002-11-28',
-                                  countryCode: '+963',
-                                  phone: '981233473',
-                                  email: 'alaashibany@gmail.com',
-                                  image: ''),
-                              mediaQuery: mediaQuery)
-                        ],
-                      ),
-                      trailing: PopupMenuButton(
-                        icon: const Icon(Icons.more_vert),
-                        onSelected: (value) {
-                          if (value == 'settings') {
-                          } else if (value == 'share') {
-                            print('Share');
-                            // share();
-                          }
-                        },
-                        itemBuilder: (context) => [
-                          PopupMenuItem(
-                            value: 'checkout',
-                            child: ListTile(
-                              leading: const Icon(Icons.done_all),
-                              title: Text('Check out'),
-                            ),
-                          ),
-                          PopupMenuItem(
-                            value: 'share',
-                            child: ListTile(
-                              leading: const Icon(Icons.link),
-                              title: Text('Share'),
-                            ),
-                          ),
-                          PopupMenuItem(
-                            value: 'copy',
-                            child: ListTile(
-                              leading: const Icon(Icons.copy),
-                              title: Text('Copy'),
-                            ),
-                          ),
-                        ],
-                      ),
-                      title: Text('First File'),
-                    ),
-                  ).animate().fade(
-                        duration: const Duration(milliseconds: 500),
-                      ),
-                  Card(
-                    color: Colors.white,
-                    child: ListTile(
-                      leading: Icon(Icons.folder),
-                      trailing: PopupMenuButton(
-                        icon: const Icon(Icons.more_vert),
-                        onSelected: (value) {
-                          if (value == 'settings') {
-                          } else if (value == 'share') {
-                            print('Share');
-                            // share();
-                          }
-                        },
-                        itemBuilder: (context) => [
-                          PopupMenuItem(
-                            value: 'share',
-                            child: ListTile(
-                              leading: const Icon(Icons.link),
-                              title: Text('Share'),
-                            ),
-                          ),
-                          PopupMenuItem(
-                            value: 'copy',
-                            child: ListTile(
-                              leading: const Icon(Icons.copy),
-                              title: Text('Copy'),
-                            ),
-                          ),
-                        ],
-                      ),
-                      title: Text('First Folder'),
-                    ),
-                  ).animate().fade(
-                        duration: const Duration(milliseconds: 500),
-                      ),
-                ],
+                          ).animate().fade(
+                              duration: const Duration(milliseconds: 500),
+                            );
+                  },
+                ),
               ));
         },
       ),
@@ -249,8 +184,12 @@ class ShowApplicationsData extends StatelessWidget {
         (member.image.isEmpty || member.image == '')
             ? Container(
                 padding: EdgeInsets.symmetric(
-                  horizontal: mediaQuery.width / 50,
-                  // vertical: mediaQuery.height / 90,
+                  horizontal: Statics.isPlatformDesktop
+                      ? mediaQuery.width / 120
+                      : mediaQuery.width / 30,
+                  vertical: Statics.isPlatformDesktop
+                      ? mediaQuery.width / 80
+                      : mediaQuery.height / 40,
                 ),
                 decoration: const BoxDecoration(
                   shape: BoxShape.circle,
@@ -261,7 +200,9 @@ class ShowApplicationsData extends StatelessWidget {
                   style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
-                      fontSize: mediaQuery.width / 20),
+                      fontSize: Statics.isPlatformDesktop
+                          ? mediaQuery.width / 80
+                          : mediaQuery.width / 20),
                 ),
               )
             : ClipOval(
@@ -278,14 +219,14 @@ class ShowApplicationsData extends StatelessWidget {
                   ),
                   errorWidget: (context, url, error) => const Icon(Icons.error),
                   fit: BoxFit.cover,
-                  width: mediaQuery.width / 9, // Adjust the size as needed
-                  height: mediaQuery.width / 9, // Adjust the size as needed
+                  width: mediaQuery.width / 8, // Adjust the size as needed
+                  height: mediaQuery.width / 8, // Adjust the size as needed
                 ),
               ),
         if (member.role == 'admin')
           Positioned(
-            bottom: -8,
-            right: -mediaQuery.width / 50,
+            bottom: 10,
+            right: -mediaQuery.width / 90,
             child: Container(
               padding: EdgeInsets.symmetric(
                   horizontal: mediaQuery.width / 120,
@@ -297,7 +238,9 @@ class ShowApplicationsData extends StatelessWidget {
               child: Icon(
                 Icons.star,
                 color: Colors.white,
-                size: mediaQuery.width / 40,
+                size: Statics.isPlatformDesktop
+                    ? mediaQuery.width / 120
+                    : mediaQuery.width / 30,
               ),
             ),
           ),

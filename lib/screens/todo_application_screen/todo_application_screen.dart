@@ -66,17 +66,12 @@ class TodoApplicationScreen extends StatelessWidget {
                   },
                   icon: Icon(
                     Icons.arrow_back,
-                    color: isNearWhite(todoCubit.todoModel.color)
-                        ? Colors.black
-                        : AppColors.white,
+                    color: AppColors.white,
                   )),
               title: Text(
                 todoCubit.taskTitleController.text,
-                style: TextStyle(
-                    color: isNearWhite(todoCubit.todoModel.color)
-                        ? Colors.black
-                        : Colors.white,
-                    fontWeight: FontWeight.bold),
+                style:
+                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
               ),
               centerTitle: true,
               actions: [
@@ -217,10 +212,7 @@ class TodoApplicationScreen extends StatelessWidget {
                                         // fillColor: Colors.white,
                                         side: const BorderSide(
                                             color: Colors.black),
-                                        activeColor: isNearWhite(
-                                                todoCubit.todoModel.color)
-                                            ? Colors.grey
-                                            : AppColors.white,
+                                        activeColor: AppColors.white,
                                         value: item.completed,
                                         onChanged: (value) async {
                                           todoCubit.newTaskFocusNode.unfocus();
@@ -285,10 +277,7 @@ class TodoApplicationScreen extends StatelessWidget {
                                 title: Text(
                                   item.title,
                                   style: TextStyle(
-                                    color:
-                                        isNearWhite(todoCubit.todoModel.color)
-                                            ? Colors.black
-                                            : AppColors.white,
+                                    color: AppColors.white,
                                   ),
                                 ),
                               ).animate().fade(
@@ -306,20 +295,14 @@ class TodoApplicationScreen extends StatelessWidget {
                                         Center(
                                           child: Icon(
                                             Icons.done_all,
-                                            color: isNearWhite(
-                                                    todoCubit.todoModel.color)
-                                                ? Colors.black
-                                                : Colors.white,
+                                            color: Colors.white,
                                             size: mediaQuery.width / 3,
                                           ),
                                         ),
                                         Text(
                                           S.of(context).there_are_no_tasks_yet,
                                           style: TextStyle(
-                                            color: isNearWhite(
-                                                    todoCubit.todoModel.color)
-                                                ? Colors.black
-                                                : Colors.white,
+                                            color: Colors.white,
                                           ),
                                         ),
                                       ],
@@ -359,7 +342,7 @@ class TodoApplicationScreen extends StatelessWidget {
               color: darkenColor(
                   allColors[todoCubit.todoModel.getApplicationSelectedColor()]
                       ['real']!,
-                  isNearWhite(todoCubit.todoModel.color) ? 0.3 : 0.1),
+                  0.1),
               child: Container(
                 padding:
                     EdgeInsets.symmetric(horizontal: mediaQuery.width / 30),
@@ -418,10 +401,7 @@ class TodoApplicationScreen extends StatelessWidget {
                       height: mediaQuery.height / 10,
                       child: CustomFormTextField(
                         fillColor: Colors.transparent,
-                        styleInput: TextStyle(
-                            color: isNearWhite(todoCubit.todoModel.color)
-                                ? Colors.black
-                                : Colors.white),
+                        styleInput: TextStyle(color: Colors.white),
                         nameLabel: '',
                         controller: todoCubit.taskController,
                         focusNode: todoCubit.newTaskFocusNode,
@@ -430,9 +410,7 @@ class TodoApplicationScreen extends StatelessWidget {
                         },
                         hintText: S.of(context).add_new_task,
                         icon: Icons.add,
-                        colorIcon: isNearWhite(todoCubit.todoModel.color)
-                            ? Colors.black
-                            : Colors.white,
+                        colorIcon: Colors.white,
                         onPressedIcon: () async {
                           todoCubit.newTaskFocusNode.unfocus();
                           print('add');

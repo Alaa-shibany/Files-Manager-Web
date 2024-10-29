@@ -1,3 +1,5 @@
+import 'package:files_manager/models/member_model.dart';
+import 'package:files_manager/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
@@ -12,6 +14,7 @@ import 'package:files_manager/models/invited_user_model.dart';
 import 'package:files_manager/widgets/custom_text_fields/custom_text_field.dart';
 
 import '../../core/animation/dialogs/dialogs.dart';
+import '../../core/functions/statics.dart';
 import '../../core/shared/local_network.dart';
 import '../../theme/color.dart';
 
@@ -30,7 +33,9 @@ class AddMemberScreen extends StatelessWidget {
         flexibleSpace: SizedBox(
           height: mediaQuery.height / 3,
         ),
-        toolbarHeight: mediaQuery.height / 12,
+        toolbarHeight: Statics.isPlatformDesktop
+            ? mediaQuery.height / 8
+            : mediaQuery.height / 12,
         title: SizedBox(
           width: mediaQuery.width / 1.3,
           child: Text(
@@ -39,7 +44,9 @@ class AddMemberScreen extends StatelessWidget {
             style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
-                fontSize: mediaQuery.width / 15),
+                fontSize: Statics.isPlatformDesktop
+                    ? mediaQuery.width / 60
+                    : mediaQuery.width / 15),
           ),
         ),
         centerTitle: true,
@@ -188,9 +195,33 @@ class AddMemberScreen extends StatelessWidget {
                       child: ElevatedButton(
                         onPressed: () async {
                           if (addMemberCubit.formKey.currentState!.validate()) {
-                            await addMemberCubit.addMember(
-                                context: context,
-                                uuid: boardSettingsCubit.currentBoard.uuid);
+                            boardSettingsCubit.currentBoard.members.add(Member(
+                                id: 1,
+                                country: Country(
+                                    id: 1,
+                                    name: 'syria',
+                                    iso3: '+963',
+                                    code: '+963'),
+                                language: Language(
+                                    id: 1,
+                                    name: 'arabic',
+                                    code: 'ar',
+                                    direction: 'rlt'),
+                                gender: Gender(id: 1, type: 'male'),
+                                firstName:
+                                    addMemberCubit.memberEmailController.text,
+                                lastName: '',
+                                mainRole: addMemberCubit.currentRole,
+                                role: addMemberCubit.currentRole,
+                                dateOfBirth: '2002',
+                                countryCode: '+963',
+                                phone: '981233473',
+                                email:
+                                    addMemberCubit.memberEmailController.text,
+                                image: ''));
+                            Navigator.pop(context);
+                            await boardSettingsCubit.resetSearch();
+                            await boardSettingsCubit.refresh();
                           }
                         },
                         style: ElevatedButton.styleFrom(

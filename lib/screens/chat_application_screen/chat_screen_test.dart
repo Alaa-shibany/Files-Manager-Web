@@ -16,7 +16,7 @@ import 'package:files_manager/cubits/application_cubit/application_cubit.dart';
 import 'package:files_manager/cubits/board_cubit/board_cubit.dart';
 import 'package:files_manager/cubits/chat_cubit/chat_cubit.dart';
 import 'package:files_manager/generated/l10n.dart';
-import 'package:files_manager/models/chat_model.dart';
+import 'package:files_manager/models/folder_model.dart';
 import 'package:files_manager/theme/color.dart';
 import 'package:files_manager/widgets/chat_application/message_widget_chat.dart';
 import 'package:files_manager/widgets/custom_text_fields/custom_text_field.dart';
@@ -40,7 +40,6 @@ class ChatScreenTest extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         return Localizations.override(
-          locale: Locale(chatCubit.chatModel.language.code),
           context: context,
           child: WillPopScope(
             onWillPop: () async {

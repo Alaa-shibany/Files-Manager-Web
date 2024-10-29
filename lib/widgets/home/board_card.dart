@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:files_manager/core/functions/statics.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,15 +7,12 @@ import 'package:shimmer/shimmer.dart';
 import 'package:files_manager/cubits/add_board_cubit/add_board_cubit.dart';
 import 'package:files_manager/cubits/all_boards_cubit/all_boards_cubit.dart';
 import 'package:files_manager/cubits/application_cubit/application_cubit.dart';
-import 'package:files_manager/cubits/barent_boards_cubit/parent_boards_cubit.dart';
 import 'package:files_manager/cubits/board_favorite_cubit/board_favorite_cubit.dart';
 import 'package:files_manager/cubits/board_settings_cubit/board_settings_cubit.dart';
-import 'package:files_manager/cubits/move_board_cubit/move_board_cubit.dart';
 import 'package:files_manager/generated/l10n.dart';
 import 'package:files_manager/models/board_model.dart';
 import 'package:files_manager/models/member_model.dart';
 import 'package:files_manager/screens/home/board_settings_screen.dart';
-import 'package:files_manager/screens/move_board_screen/move_board_screen.dart';
 import 'package:files_manager/theme/color.dart';
 
 import '../../cubits/board_cubit/board_cubit.dart';
@@ -47,7 +45,7 @@ class BoardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context).size;
-    final leaveFromBoardCubit = context.read<LeaveFromBoardCubit>();
+    // final leaveFromBoardCubit = context.read<LeaveFromBoardCubit>();
 
     // final allBoardsCubit = context.read<AllBoardsCubit>();
     return GestureDetector(
@@ -87,325 +85,202 @@ class BoardWidget extends StatelessWidget {
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 500),
-        child: Card(
-          margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        SizedBox(
-                          height: mediaQuery.height / 20,
-                          width: mediaQuery.width / 10,
-                          child: currentBoard!.hasImage
-                              ? currentBoard!.image.isEmpty
-                                  ? ClipRRect(
-                                      borderRadius: BorderRadius.circular(360),
-                                      child: Image.file(
-                                        currentBoard!.imageFile!,
-                                        fit: BoxFit.contain,
-                                      ),
-                                    )
-                                  : ClipRRect(
-                                      borderRadius: BorderRadius.circular(360),
-                                      child: CachedNetworkImage(
-                                        imageUrl: currentBoard!.image,
-                                        placeholder: (context, url) =>
-                                            Shimmer.fromColors(
-                                          baseColor: Colors.grey[300]!,
-                                          highlightColor: Colors.grey[100]!,
-                                          child: Container(
-                                            color: Colors.white,
-                                          ),
+        child: SizedBox(
+          width: Statics.isPlatformDesktop
+              ? mediaQuery.width / 3
+              : mediaQuery.width,
+          height: mediaQuery.height / 4,
+          child: Card(
+            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SizedBox(
+                            // height: Statics.isPlatformDesktop
+                            //     ? mediaQuery.height / 40
+                            //     : mediaQuery.height / 20,
+                            // width: Statics.isPlatformDesktop
+                            //     ? mediaQuery.width / 30
+                            //     : mediaQuery.width / 10,
+                            child: currentBoard!.hasImage
+                                ? currentBoard!.image.isEmpty
+                                    ? ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(360),
+                                        child: Image.file(
+                                          currentBoard!.imageFile!,
+                                          fit: BoxFit.contain,
                                         ),
-                                        errorWidget: (context, url, error) =>
-                                            const Icon(Icons.error),
-                                        fit: BoxFit.contain,
-                                      ),
-                                    )
-                              : CircleAvatar(
-                                  child: Text(
-                                    currentBoard!.icon,
-                                    style: TextStyle(
-                                        fontSize: mediaQuery.width / 15),
+                                      )
+                                    : ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(360),
+                                        child: CachedNetworkImage(
+                                          imageUrl: currentBoard!.image,
+                                          placeholder: (context, url) =>
+                                              Shimmer.fromColors(
+                                            baseColor: Colors.grey[300]!,
+                                            highlightColor: Colors.grey[100]!,
+                                            child: Container(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          errorWidget: (context, url, error) =>
+                                              const Icon(Icons.error),
+                                          fit: BoxFit.contain,
+                                        ),
+                                      )
+                                : CircleAvatar(
+                                    child: Text(
+                                      currentBoard!.icon,
+                                      style: TextStyle(
+                                          fontSize: Statics.isPlatformDesktop
+                                              ? mediaQuery.width / 90
+                                              : mediaQuery.width / 30),
+                                    ),
                                   ),
-                                ),
-                        ),
-                        const SizedBox(width: 10),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Flexible(
-                              child: Container(
-                                color: Colors.transparent,
-                                width: mediaQuery.width / 2,
-                                child: Text(
-                                  overflow: TextOverflow.ellipsis,
-                                  currentBoard!.title,
-                                  style: const TextStyle(
-                                    color: AppColors.dark,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
+                          ),
+                          const SizedBox(width: 10),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Flexible(
+                                child: Container(
+                                  color: Colors.transparent,
+                                  width: Statics.isPlatformDesktop
+                                      ? mediaQuery.width / 5
+                                      : mediaQuery.width / 2,
+                                  child: Text(
+                                    overflow: TextOverflow.ellipsis,
+                                    currentBoard!.title,
+                                    style: const TextStyle(
+                                      color: AppColors.dark,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  currentBoard!.parentId != null
-                                      ? S.of(context).subpanel
-                                      : 'Main Group',
-                                  style: const TextStyle(
-                                    color: Colors.black38,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: mediaQuery.width / 40,
-                                ),
-                                Icon(
-                                  Icons.file_copy,
-                                  size: mediaQuery.width / 25,
-                                  color: Colors.grey,
-                                ),
-                                SizedBox(
-                                  width: mediaQuery.width / 90,
-                                ),
-                                Text(
-                                  '2',
-                                  style: const TextStyle(
-                                    color: Colors.black38,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                )
-                              ],
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    currentBoard!.parentId != null
-                        ? Row(
-                            children: [
-                              PopupMenuButton(
-                                icon: const Icon(Icons.more_vert),
-                                onSelected: (value) {
-                                  if (value == 'settings') {
-                                    print('Setting');
-                                    Navigator.of(context)
-                                        .push(
-                                      MaterialPageRoute(
-                                        builder: (context) => MultiBlocProvider(
-                                          providers: [
-                                            BlocProvider(
-                                              create: (context) =>
-                                                  BoardSettingsCubit(
-                                                      currentBoard:
-                                                          currentBoard!)
-                                                    ..initState(),
-                                            ),
-                                          ],
-                                          child: BoardSettingsScreen(
-                                            allBoardCubit: allBoardsCubit,
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                        .then(
-                                      (value) async {
-                                        if (currentBoard!.parentId == null) {
-                                          return;
-                                        }
-
-                                        await boardCubit!.refresh();
-                                      },
-                                    );
-                                  } else if (value == 'share') {
-                                    print('Share');
-                                    share();
-                                  }
-                                },
-                                itemBuilder: (context) => [
-                                  PopupMenuItem(
-                                    value: 'share',
-                                    child: ListTile(
-                                      leading: const Icon(Icons.link),
-                                      title: Text(S.of(context).share_link),
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    currentBoard!.parentId != null
+                                        ? S.of(context).subpanel
+                                        : 'Main Group',
+                                    style: const TextStyle(
+                                      color: Colors.black38,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  PopupMenuItem(
-                                    value: 'settings',
-                                    child: ListTile(
-                                      leading: const Icon(Icons.settings),
-                                      title: Text(S.of(context).board_settings),
-                                    ),
+                                  SizedBox(
+                                    width: Statics.isPlatformDesktop
+                                        ? mediaQuery.width / 90
+                                        : mediaQuery.width / 40,
                                   ),
+                                  Icon(
+                                    Icons.file_copy,
+                                    size: Statics.isPlatformDesktop
+                                        ? mediaQuery.width / 80
+                                        : mediaQuery.width / 25,
+                                    color: Colors.grey,
+                                  ),
+                                  SizedBox(
+                                    width: Statics.isPlatformDesktop
+                                        ? mediaQuery.width / 150
+                                        : mediaQuery.width / 90,
+                                  ),
+                                  Text(
+                                    '${currentBoard!.allFiles.length}',
+                                    style: const TextStyle(
+                                      color: Colors.black38,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  )
                                 ],
                               ),
                             ],
-                          )
-                        : Row(
-                            children: [
-                              PopupMenuButton(
-                                icon: const Icon(Icons.more_vert),
-                                onSelected: (value) async {
-                                  if (value == 'settings') {
-                                    print('Setting');
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) => MultiBlocProvider(
-                                          providers: [
-                                            BlocProvider(
-                                              create: (context) =>
-                                                  BoardSettingsCubit(
-                                                      currentBoard:
-                                                          currentBoard!)
-                                                    ..initState(),
-                                            ),
-                                          ],
-                                          child: BoardSettingsScreen(
-                                            allBoardCubit: allBoardsCubit,
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  } else if (value == 'share') {
-                                    print('Share');
-                                    share();
-                                  } else if (value == 'leave') {
-                                    print('leave board');
-                                    leaveFromBoardCubit.leaveBoard(
-                                        context: context,
-                                        index: currentIndex,
-                                        currentBoard: currentBoard!);
-                                  } else if (value == 'create_sub_board') {
-                                    print('create_sub_board');
-                                    print(
-                                        'current Board Id is:=> ${currentBoard!.id.toString()}');
-
-                                    await addBoardCubit!.addSubBoard(
-                                      parentBoard: currentBoard!,
-                                      context: context,
-                                      parentId: currentBoard!.id.toString(),
-                                    );
-                                  } else if (value == 'move_board') {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) => MultiBlocProvider(
-                                            providers: [
-                                              BlocProvider(
-                                                create: (context) =>
-                                                    ParentBoardsCubit()
-                                                      ..initState(
-                                                          context: context),
-                                              ),
-                                              BlocProvider(
-                                                create: (context) =>
-                                                    MoveBoardCubit(),
-                                              ),
-                                            ],
-                                            child: MoveBoardScreen(
-                                              allBoardsCubit: allBoardsCubit,
-                                              movedBoard: currentBoard!,
-                                            )),
-                                      ),
-                                    );
-                                  }
-                                },
-                                itemBuilder: (context) => currentBoard!
-                                        .children.isNotEmpty
-                                    ? [
-                                        PopupMenuItem(
-                                          value: 'share',
-                                          child: ListTile(
-                                            leading: const Icon(Icons.link),
-                                            title:
-                                                Text(S.of(context).share_link),
-                                          ),
-                                        ),
-                                        PopupMenuItem(
-                                          value: 'leave',
-                                          child: ListTile(
-                                            leading:
-                                                const Icon(Icons.exit_to_app),
-                                            title: Text(
-                                                S.of(context).leave_the_board),
-                                          ),
-                                        ),
-                                        PopupMenuItem(
-                                          value: 'settings',
-                                          child: ListTile(
-                                            leading: const Icon(Icons.settings),
-                                            title: Text(
-                                                S.of(context).board_settings),
-                                          ),
-                                        ),
-                                      ]
-                                    : [
-                                        PopupMenuItem(
-                                          value: 'share',
-                                          child: ListTile(
-                                            leading: const Icon(Icons.link),
-                                            title:
-                                                Text(S.of(context).share_link),
-                                          ),
-                                        ),
-                                        PopupMenuItem(
-                                          value: 'leave',
-                                          child: ListTile(
-                                            leading:
-                                                const Icon(Icons.exit_to_app),
-                                            title: Text(
-                                                S.of(context).leave_the_board),
-                                          ),
-                                        ),
-                                        PopupMenuItem(
-                                          value: 'settings',
-                                          child: ListTile(
-                                            leading: const Icon(Icons.settings),
-                                            title: Text(
-                                                S.of(context).board_settings),
-                                          ),
-                                        ),
-                                      ],
-                              ),
-                            ],
                           ),
-                  ],
-                ),
-                // SizedBox(height: mediaQuery.height / 90),
-                Wrap(
-                  alignment: WrapAlignment.start,
-                  children: List.generate(
-                    currentBoard!.members.length,
-                    (index) {
-                      return memberWidget(
-                        mediaQuery: mediaQuery,
-                        member: currentBoard!.members[index],
-                      );
-                    },
-                  ),
-                ),
-                // SizedBox(height: mediaQuery.height / 50),
-                currentBoard!.description.isEmpty
-                    ? const SizedBox()
-                    : Text(
-                        currentBoard!.description,
-                        style: const TextStyle(color: Colors.black45),
+                        ],
                       ),
-              ],
+                      PopupMenuButton(
+                          icon: const Icon(Icons.more_vert),
+                          onSelected: (value) async {
+                            if (value == 'settings') {
+                              print('Setting');
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => MultiBlocProvider(
+                                    providers: [
+                                      BlocProvider(
+                                        create: (context) => BoardSettingsCubit(
+                                            currentBoard: currentBoard!)
+                                          ..initState(),
+                                      ),
+                                    ],
+                                    child: BoardSettingsScreen(
+                                      allBoardCubit: allBoardsCubit,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            } else if (value == 'leave') {
+                              await allBoardsCubit.removeBoard(
+                                  id: currentBoard!.id, index: currentIndex);
+                            }
+                          },
+                          itemBuilder: (context) => [
+                                PopupMenuItem(
+                                  value: 'leave',
+                                  child: ListTile(
+                                    leading: const Icon(Icons.exit_to_app),
+                                    title: Text(S.of(context).leave_the_board),
+                                  ),
+                                ),
+                                PopupMenuItem(
+                                  value: 'settings',
+                                  child: ListTile(
+                                    leading: const Icon(Icons.settings),
+                                    title: Text(S.of(context).board_settings),
+                                  ),
+                                ),
+                              ]),
+                    ],
+                  ),
+                  // SizedBox(height: mediaQuery.height / 90),
+                  Wrap(
+                    alignment: WrapAlignment.start,
+                    children: List.generate(
+                      currentBoard!.members.length,
+                      (index) {
+                        return memberWidget(
+                          mediaQuery: mediaQuery,
+                          member: currentBoard!.members[index],
+                        );
+                      },
+                    ),
+                  ),
+                  // SizedBox(height: mediaQuery.height / 50),
+                  currentBoard!.description.isEmpty
+                      ? const SizedBox()
+                      : Text(
+                          currentBoard!.description,
+                          style: const TextStyle(color: Colors.black45),
+                        ),
+                ],
+              ),
             ),
           ),
         ),
@@ -420,8 +295,12 @@ class BoardWidget extends StatelessWidget {
         (member.image.isEmpty || member.image == '')
             ? Container(
                 padding: EdgeInsets.symmetric(
-                  horizontal: mediaQuery.width / 30,
-                  vertical: mediaQuery.height / 40,
+                  horizontal: Statics.isPlatformDesktop
+                      ? mediaQuery.width / 120
+                      : mediaQuery.width / 30,
+                  vertical: Statics.isPlatformDesktop
+                      ? mediaQuery.width / 80
+                      : mediaQuery.height / 40,
                 ),
                 decoration: const BoxDecoration(
                   shape: BoxShape.circle,
@@ -432,7 +311,9 @@ class BoardWidget extends StatelessWidget {
                   style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
-                      fontSize: mediaQuery.width / 20),
+                      fontSize: Statics.isPlatformDesktop
+                          ? mediaQuery.width / 80
+                          : mediaQuery.width / 20),
                 ),
               )
             : ClipOval(
@@ -468,7 +349,9 @@ class BoardWidget extends StatelessWidget {
               child: Icon(
                 Icons.star,
                 color: Colors.white,
-                size: mediaQuery.width / 30,
+                size: Statics.isPlatformDesktop
+                    ? mediaQuery.width / 120
+                    : mediaQuery.width / 30,
               ),
             ),
           ),

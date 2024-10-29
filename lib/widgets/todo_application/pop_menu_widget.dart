@@ -4,7 +4,6 @@ import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:hive/hive.dart';
 import 'package:files_manager/core/animation/dialogs/dialogs.dart';
 import 'package:files_manager/core/animation/dialogs/expired_dialog.dart';
-import 'package:files_manager/core/functions/color_to_hex.dart';
 import 'package:files_manager/cubits/all_boards_cubit/all_boards_cubit.dart';
 import 'package:files_manager/cubits/application_cubit/application_cubit.dart';
 import 'package:files_manager/cubits/board_cubit/board_cubit.dart';
@@ -15,8 +14,8 @@ import 'package:files_manager/cubits/todo_cubit/todo_cubit.dart';
 import 'package:files_manager/cubits/update_application_cubit/update_application_cubit.dart';
 import 'package:files_manager/generated/l10n.dart';
 import 'package:files_manager/interfaces/applications_abstract.dart';
-import 'package:files_manager/models/chat_model.dart';
-import 'package:files_manager/models/todo_model.dart';
+import 'package:files_manager/models/folder_model.dart';
+import 'package:files_manager/models/file_model.dart';
 import 'package:files_manager/screens/move_application_screen/move_application_screen.dart';
 import 'package:files_manager/screens/todo_application_screen/application_settings_screen.dart';
 import 'package:files_manager/theme/color.dart';
@@ -84,11 +83,7 @@ class PopMenuWidget extends StatelessWidget {
       },
       builder: (context, state) {
         return PopupMenuButton<String>(
-          iconColor: application is ChatModel
-              ? AppColors.white
-              : isNearWhite(todoCubit!.todoModel.color)
-                  ? Colors.black
-                  : AppColors.white,
+          iconColor: AppColors.white,
           onSelected: (value) async {
             if (value == 'settings') {
               Navigator.of(context)
@@ -102,10 +97,10 @@ class PopMenuWidget extends StatelessWidget {
               ))
                   .then(
                 (value) async {
-                  if (application is TodoModel) {
+                  if (application is FileModel) {
                     print('application is todo');
                     todoCubit!.refresh();
-                  } else if (application is ChatModel) {
+                  } else if (application is FolderModel) {
                     print('application is chat');
                     chatCubit!.refresh();
                   } else {

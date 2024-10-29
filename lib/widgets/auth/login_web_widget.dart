@@ -4,9 +4,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../core/functions/validate_input.dart';
+import '../../cubits/add_board_cubit/add_board_cubit.dart';
+import '../../cubits/all_boards_cubit/all_boards_cubit.dart';
 import '../../cubits/auth/login/login_cubit.dart';
+import '../../cubits/leave_from_board_cubit/leave_from_board_cubit.dart';
 import '../../cubits/locale_cubit/locale_cubit.dart';
 import '../../generated/l10n.dart';
+import '../../screens/home/board_screen.dart';
 import '../custom_text_fields/custom_text_field.dart';
 
 class LoginWebWidget extends StatelessWidget {
@@ -118,8 +122,26 @@ class LoginWebWidget extends StatelessWidget {
                             //   email: emailController.text.toString(),
                             //   password: passwordController.text.toString(),
                             // );
-                            Navigator.pushReplacementNamed(
-                                context, '/navigation_screen');
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => MultiBlocProvider(
+                                    providers: [
+                                      BlocProvider(
+                                        create: (context) => AllBoardsCubit()
+                                          ..initState(context: context),
+                                      ),
+                                      BlocProvider(
+                                        create: (context) =>
+                                            LeaveFromBoardCubit(),
+                                      ),
+                                      BlocProvider(
+                                        create: (context) => AddBoardCubit(),
+                                      ),
+                                    ],
+                                    child: const BoardScreen(),
+                                  ),
+                                ));
 
                             print(loginCubit.emailController.text.toString());
                             print(

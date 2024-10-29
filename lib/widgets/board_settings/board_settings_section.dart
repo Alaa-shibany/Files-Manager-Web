@@ -1,17 +1,14 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
+import 'package:files_manager/core/functions/statics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:files_manager/core/functions/color_to_hex.dart';
 import 'package:files_manager/cubits/board_settings_cubit/board_settings_cubit.dart';
 import 'package:files_manager/cubits/locale_cubit/locale_cubit.dart';
 import 'package:files_manager/generated/l10n.dart';
 import 'package:files_manager/theme/color.dart';
 import 'package:files_manager/widgets/custom_text_fields/custom_text_field.dart';
-import 'package:image_cropper/image_cropper.dart';
 
 class BoardSettingsSection extends StatelessWidget {
   const BoardSettingsSection(
@@ -34,136 +31,6 @@ class BoardSettingsSection extends StatelessWidget {
               height: mediaQuery.height / 50,
             ),
             Text(
-              S.of(context).board_image,
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(
-              height: mediaQuery.height / 90,
-            ),
-            BlocConsumer<BoardSettingsCubit, BoardSettingsState>(
-              listener: (context, state) {},
-              builder: (context, state) {
-                return GestureDetector(
-                  child: Container(
-                    height: mediaQuery.height / 5,
-                    width: mediaQuery.width,
-                    alignment: Alignment.center,
-                    child: boardSettingsCubit.currentBoard.hasImage
-                        ? boardSettingsCubit.currentBoard.imageFile != null
-                            ? ClipRRect(
-                                borderRadius: BorderRadius.circular(360),
-                                child: Image.file(
-                                  boardSettingsCubit.currentBoard.imageFile!,
-                                  fit: BoxFit.contain,
-                                ),
-                              )
-                            : CachedNetworkImage(
-                                imageUrl: boardSettingsCubit.currentBoard.image,
-                                placeholder: (context, url) =>
-                                    Shimmer.fromColors(
-                                  baseColor:
-                                      const Color.fromARGB(255, 51, 53, 54),
-                                  highlightColor: Colors.grey[900]!,
-                                  child: Container(
-                                    color:
-                                        const Color.fromARGB(255, 51, 53, 54),
-                                  ),
-                                ),
-                                errorWidget: (context, url, error) =>
-                                    const Icon(Icons.error),
-                                fit: BoxFit.contain,
-                              )
-                        : Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Icon(Icons.image),
-                              Text(
-                                S.of(context).board_image,
-                              )
-                            ],
-                          ),
-                  ),
-                );
-              },
-            ),
-            SizedBox(
-              height: mediaQuery.height / 90,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                ElevatedButton(
-                  onPressed: () async {
-                    await boardSettingsCubit.deleteBoardImage();
-                  },
-                  style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.red,
-                      backgroundColor: Colors.transparent),
-                  child: Container(
-                    alignment: Alignment.center,
-                    width: mediaQuery.width / 3,
-                    child: Text(
-                      S.of(context).delete_image,
-                      style: const TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    final XFile? pickedFile = await ImagePicker()
-                        .pickImage(source: ImageSource.gallery);
-                    if (pickedFile != null) {
-                      final croppedFile = await ImageCropper().cropImage(
-                        sourcePath: pickedFile.path,
-                        uiSettings: [
-                          AndroidUiSettings(
-                            toolbarTitle: S.of(context).crop_image,
-                            toolbarColor: AppColors.dark,
-                            toolbarWidgetColor: Colors.white,
-                            initAspectRatio: CropAspectRatioPreset.original,
-                            lockAspectRatio: true,
-                            cropStyle: CropStyle.circle,
-                            aspectRatioPresets: [
-                              CropAspectRatioPreset.square,
-                            ],
-                          ),
-                          IOSUiSettings(
-                            cropStyle: CropStyle.circle,
-                            aspectRatioPresets: [
-                              CropAspectRatioPreset.square,
-                            ],
-                            title: S.of(context).crop_image,
-                          ),
-                        ],
-                      );
-                      if (croppedFile != null) {
-                        await boardSettingsCubit.pickBoardImage(
-                            file: croppedFile);
-                      }
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.transparent),
-                  child: Container(
-                    alignment: Alignment.center,
-                    width: mediaQuery.width / 3,
-                    child: Text(
-                      S.of(context).add_image,
-                      style: const TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: mediaQuery.height / 40,
-            ),
-            Text(
               S.of(context).board_icon,
               style: const TextStyle(
                 color: Colors.white,
@@ -178,12 +45,17 @@ class BoardSettingsSection extends StatelessWidget {
                     await boardSettingsCubit.showEmojiKeyboard();
                   },
                   child: Container(
-                    height: mediaQuery.height / 10,
+                    height: Statics.isPlatformDesktop
+                        ? mediaQuery.height / 5
+                        : mediaQuery.height / 10,
                     width: mediaQuery.width,
                     alignment: Alignment.center,
                     child: Text(
                       boardSettingsCubit.currentBoard.icon,
-                      style: TextStyle(fontSize: mediaQuery.width / 10),
+                      style: TextStyle(
+                          fontSize: Statics.isPlatformDesktop
+                              ? mediaQuery.width / 25
+                              : mediaQuery.width / 10),
                     ),
                   ),
                 );

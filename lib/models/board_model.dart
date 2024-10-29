@@ -5,6 +5,8 @@ import 'package:files_manager/models/invited_user_model.dart';
 import 'package:files_manager/models/member_model.dart';
 import 'package:files_manager/models/user_model.dart';
 
+import '../interfaces/applications_abstract.dart';
+
 class Board {
   int id;
   String uuid;
@@ -26,7 +28,7 @@ class Board {
   List<Board> children;
   List<Member> members;
   List<InvitedUser> invitedUsers;
-
+  List<Application> allFiles;
   int? boardColorIndex;
   File? imageFile;
 
@@ -55,6 +57,7 @@ class Board {
     required this.language,
     required this.roleInBoard,
     required this.color,
+    required this.allFiles,
     required this.tasksCommentsCount,
     required this.shareLink,
     required this.title,
@@ -74,6 +77,7 @@ class Board {
     return Board(
       id: json['id'],
       uuid: json['uuid'],
+      allFiles: [],
       parentId: json['parent_id'],
       shareLink: json['share_link'],
       userId: json['user_id'],

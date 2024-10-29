@@ -24,9 +24,6 @@ class ChatSettingsScreen extends StatelessWidget {
           listener: (context, state) {},
           builder: (context, state) {
             return Localizations.override(
-              locale: chatCubit.chatModel.langChatApp == 'default'
-                  ? localCubit.locale
-                  : Locale(chatCubit.chatModel.langChatApp),
               context: context,
               child: DefaultTabController(
                 length: 3,

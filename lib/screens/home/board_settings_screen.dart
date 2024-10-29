@@ -1,3 +1,4 @@
+import 'package:files_manager/core/functions/statics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
@@ -56,10 +57,7 @@ class BoardSettingsScreen extends StatelessWidget {
           context: context,
           child: WillPopScope(
             onWillPop: () async {
-              // await boardSettingsCubit.updateBoard(
-              //   context: context,
-              // );
-              allBoardCubit.refresh();
+              await allBoardCubit.refresh();
               return true;
             },
             child: DefaultTabController(
@@ -70,14 +68,18 @@ class BoardSettingsScreen extends StatelessWidget {
                   flexibleSpace: SizedBox(
                     height: mediaQuery.height / 3,
                   ),
-                  toolbarHeight: mediaQuery.height / 12,
+                  toolbarHeight: Statics.isPlatformDesktop
+                      ? mediaQuery.height / 8
+                      : mediaQuery.height / 12,
                   title: SizedBox(
                     child: CustomTextFields(
                       textAlign: TextAlign.end,
                       styleInput: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
-                          fontSize: mediaQuery.width / 15),
+                          fontSize: Statics.isPlatformDesktop
+                              ? mediaQuery.width / 60
+                              : mediaQuery.width / 15),
                       controller: boardSettingsCubit.boardTitleController,
                       onChanged: (p0) async {
                         await boardSettingsCubit.changeTitle();
@@ -87,9 +89,6 @@ class BoardSettingsScreen extends StatelessWidget {
                   centerTitle: true,
                   leading: IconButton(
                       onPressed: () async {
-                        // await boardSettingsCubit.updateBoard(
-                        //   context: context,
-                        // );
                         Navigator.pop(context);
                         allBoardCubit.refresh();
                         FocusScope.of(context).unfocus();
@@ -104,9 +103,14 @@ class BoardSettingsScreen extends StatelessWidget {
                     indicator: const BoxDecoration(
                       color: AppColors.dark,
                     ),
-                    labelStyle: TextStyle(fontSize: mediaQuery.width / 30),
-                    unselectedLabelStyle:
-                        TextStyle(fontSize: mediaQuery.width / 30),
+                    labelStyle: TextStyle(
+                        fontSize: Statics.isPlatformDesktop
+                            ? mediaQuery.width / 90
+                            : mediaQuery.width / 30),
+                    unselectedLabelStyle: TextStyle(
+                        fontSize: Statics.isPlatformDesktop
+                            ? mediaQuery.width / 90
+                            : mediaQuery.width / 30),
                     tabs: boardSettingsCubit.currentBoard.parentId != null
                         ? [
                             Tab(
@@ -120,23 +124,32 @@ class BoardSettingsScreen extends StatelessWidget {
                         : [
                             Tab(
                               text: S.of(context).settings,
-                              icon: const Icon(
+                              icon: Icon(
                                 Icons.settings,
                                 color: Colors.white,
+                                size: Statics.isPlatformDesktop
+                                    ? mediaQuery.width / 50
+                                    : mediaQuery.width / 30,
                               ),
                             ),
                             Tab(
                               text: S.of(context).users,
-                              icon: const Icon(
+                              icon: Icon(
                                 Icons.person,
                                 color: Colors.white,
+                                size: Statics.isPlatformDesktop
+                                    ? mediaQuery.width / 50
+                                    : mediaQuery.width / 30,
                               ),
                             ),
                             Tab(
                               text: S.of(context).privacy,
-                              icon: const Icon(
+                              icon: Icon(
                                 Icons.visibility,
                                 color: Colors.white,
+                                size: Statics.isPlatformDesktop
+                                    ? mediaQuery.width / 50
+                                    : mediaQuery.width / 30,
                               ),
                             ),
                           ],

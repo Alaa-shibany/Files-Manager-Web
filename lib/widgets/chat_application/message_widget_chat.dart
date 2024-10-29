@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:files_manager/core/functions/color_to_hex.dart';
 import 'package:files_manager/cubits/chat_cubit/chat_cubit.dart';
-import 'package:files_manager/models/chat_model.dart';
+import 'package:files_manager/models/folder_model.dart';
 
 import '../../theme/color.dart';
 
@@ -83,11 +82,7 @@ class MessageWidgetChat extends StatelessWidget {
                               alignment: Alignment.center,
                               width: mediaQuery.width / 8,
                               decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color:
-                                          isNearWhite(chatCubit.chatModel.color)
-                                              ? Colors.black26
-                                              : Colors.white24)),
+                                  border: Border.all(color: Colors.white24)),
                               child: Icon(
                                 chatMessage.messageType == 'video'
                                     ? Icons.video_camera_back_rounded
@@ -96,9 +91,7 @@ class MessageWidgetChat extends StatelessWidget {
                                         : chatMessage.messageType == 'screen'
                                             ? Icons.video_camera_back_rounded
                                             : Icons.image,
-                                color: isNearWhite(chatCubit.chatModel.color)
-                                    ? Colors.black26
-                                    : Colors.white,
+                                color: Colors.white,
                               ),
                             ),
                             Container(
@@ -107,19 +100,11 @@ class MessageWidgetChat extends StatelessWidget {
                                   horizontal: mediaQuery.width / 90),
                               width: mediaQuery.width / 3.1,
                               decoration: BoxDecoration(
-                                border: Border.all(
-                                    color:
-                                        isNearWhite(chatCubit.chatModel.color)
-                                            ? Colors.black26
-                                            : Colors.white24),
+                                border: Border.all(color: Colors.white24),
                               ),
                               child: Text(
                                 fileName,
-                                style: TextStyle(
-                                    color:
-                                        isNearWhite(chatCubit.chatModel.color)
-                                            ? Colors.black
-                                            : Colors.white),
+                                style: TextStyle(color: Colors.white),
                               ),
                             )
                           ],
@@ -130,10 +115,7 @@ class MessageWidgetChat extends StatelessWidget {
                         child: Text(
                           chatMessage.message ?? '',
                           style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: isNearWhite(chatCubit.chatModel.color)
-                                  ? Colors.black
-                                  : Colors.white),
+                              fontWeight: FontWeight.bold, color: Colors.white),
                         ),
                       ),
                 trailing: Column(
@@ -147,9 +129,7 @@ class MessageWidgetChat extends StatelessWidget {
                         ),
                       ),
                       style: TextStyle(
-                        color: isNearWhite(chatCubit.chatModel.color)
-                            ? Colors.black
-                            : Colors.white38,
+                        color: Colors.white38,
                         fontSize: mediaQuery.width / 30,
                       ),
                     ),
@@ -160,25 +140,19 @@ class MessageWidgetChat extends StatelessWidget {
                         ),
                       ),
                       style: TextStyle(
-                        color: isNearWhite(chatCubit.chatModel.color)
-                            ? Colors.black
-                            : Colors.white38,
+                        color: Colors.white38,
                         fontSize: mediaQuery.width / 30,
                       ),
                     ),
                     chatMessage.isSent!
                         ? Icon(
                             Icons.done_all,
-                            color: isNearWhite(chatCubit.chatModel.color)
-                                ? Colors.black
-                                : Colors.white38,
+                            color: Colors.white38,
                             size: mediaQuery.width / 25,
                           )
                         : Icon(
                             Icons.timelapse_rounded,
-                            color: isNearWhite(chatCubit.chatModel.color)
-                                ? Colors.black
-                                : Colors.white38,
+                            color: Colors.white38,
                             size: mediaQuery.width / 25,
                           ),
                   ],

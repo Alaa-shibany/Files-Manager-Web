@@ -2,6 +2,8 @@ import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 
 import 'package:dio/dio.dart' as Dio;
+import 'package:files_manager/models/folder_model.dart';
+import 'package:files_manager/models/file_model.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:files_manager/core/functions/apis_error_handler.dart';
@@ -9,8 +11,6 @@ import 'package:files_manager/core/server/dio_settings.dart';
 import 'package:files_manager/core/shared/connect.dart';
 import 'package:files_manager/core/shared/local_network.dart';
 import 'package:files_manager/interfaces/applications_abstract.dart';
-import 'package:files_manager/models/chat_model.dart';
-import 'package:files_manager/models/todo_model.dart';
 
 part 'application_state.dart';
 
@@ -69,10 +69,10 @@ class ApplicationCubit extends Cubit<ApplicationState> {
 
         for (var i = 0; i < jsonData.length; i++) {
           if (jsonData[i]['application']['id'] == 1) {
-            TodoModel todoModel = TodoModel.fromJson(jsonData[i]);
+            FileModel todoModel = FileModel.fromJson(jsonData[i]);
             newBoardsApp.add(todoModel);
           } else if (jsonData[i]['application']['id'] == 2) {
-            ChatModel chatModel = ChatModel.fromJson(jsonData[i]);
+            FolderModel chatModel = FolderModel.fromJson(jsonData[i]);
             newBoardsApp.add(chatModel);
           }
         }

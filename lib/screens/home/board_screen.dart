@@ -1,27 +1,23 @@
+import 'package:files_manager/core/functions/statics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:files_manager/core/animation/dialogs/dialogs.dart';
 import 'package:files_manager/core/animation/dialogs/expired_dialog.dart';
 import 'package:files_manager/core/shared/local_network.dart';
-import 'package:files_manager/core/shimmer/board_shimmer.dart';
 import 'package:files_manager/cubits/add_board_cubit/add_board_cubit.dart';
 import 'package:files_manager/cubits/all_boards_cubit/all_boards_cubit.dart';
 import 'package:files_manager/cubits/application_cubit/application_cubit.dart';
 import 'package:files_manager/cubits/board_favorite_cubit/board_favorite_cubit.dart';
 import 'package:files_manager/generated/l10n.dart';
-import 'package:files_manager/models/board_model.dart';
 import 'package:files_manager/widgets/home/board_card.dart';
 import 'package:files_manager/widgets/home/custom_appbar.dart';
-import '../../core/functions/color_to_hex.dart';
 import '../../cubits/board_cubit/board_cubit.dart';
 import '../../cubits/leave_from_board_cubit/leave_from_board_cubit.dart';
-import '../../models/member_model.dart';
-import '../../models/user_model.dart';
-import '../../widgets/helper/no_data.dart';
+
+import '../../theme/color.dart';
 import '../add_board_screen/add_board_screen.dart';
 
 class BoardScreen extends StatelessWidget {
@@ -33,7 +29,6 @@ class BoardScreen extends StatelessWidget {
     final addBoardCubit = context.read<AddBoardCubit>();
     final favoriteCubit = context.read<BoardFavoriteCubit>();
     final mediaQuery = MediaQuery.of(context).size;
-
     return Scaffold(
       appBar: CustomAppBar(
         title: S.of(context).my_boards,
@@ -99,7 +94,7 @@ class BoardScreen extends StatelessWidget {
             return IconButton(
               tooltip: S.of(context).add_board,
               onPressed: () async {
-                await addBoardCubit.addBoard(context: context);
+                await allBoardsCubit.addBoard();
               },
               icon: const Icon(Icons.add),
             );
@@ -114,9 +109,82 @@ class BoardScreen extends StatelessWidget {
             icon: Icon(
               Icons.edit_document,
               color: Colors.white,
-              size: mediaQuery.width / 15,
+              size: Statics.isPlatformDesktop
+                  ? mediaQuery.width / 50
+                  : mediaQuery.width / 15,
             ),
           ),
+          Statics.isPlatformDesktop
+              ? Row(
+                  children: [
+                    IconButton(
+                      tooltip: S.of(context).daily_report,
+                      onPressed: () {
+                        Navigator.of(context).pushNamed('/report_screen');
+                      },
+                      icon: Icon(Icons.notifications,
+                          color: Colors.white, size: mediaQuery.width / 50),
+                    ),
+                    IconButton(
+                      tooltip: S.of(context).daily_report,
+                      onPressed: () {
+                        // Navigator.of(context).pushNamed('/report_screen');
+                      },
+                      icon: Icon(Icons.logout,
+                          color: Colors.white, size: mediaQuery.width / 50),
+                    ),
+                  ],
+                )
+              : PopupMenuButton<String>(
+                  iconColor: AppColors.white,
+                  onSelected: (value) async {},
+                  itemBuilder: (BuildContext context) {
+                    return [
+                      PopupMenuItem<String>(
+                        value: 'notification',
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(
+                              Icons.notifications,
+                              color: Colors.white,
+                            ),
+                            SizedBox(
+                              width: mediaQuery.width / 90,
+                            ),
+                            Text(
+                              S.of(context).notifications,
+                              style: const TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      PopupMenuItem<String>(
+                        value: 'logout',
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(
+                              Icons.logout,
+                              color: Colors.white,
+                            ),
+                            SizedBox(
+                              width: mediaQuery.width / 90,
+                            ),
+                            Text(
+                              S.of(context).logout,
+                              style: const TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ];
+                  },
+                ),
         ],
       ),
       body: BlocConsumer<LeaveFromBoardCubit, LeaveFromBoardState>(
@@ -128,7 +196,9 @@ class BoardScreen extends StatelessWidget {
                 title: S.of(context).leaving);
           } else if (state is LeaveFromBoardSuccessState) {
             Navigator.pop(context);
-            allBoardsCubit.removeBoard(index: state.index);
+            allBoardsCubit.removeBoard(
+                index: state.index,
+                id: allBoardsCubit.allBoards[state.index].id);
           } else if (state is LeaveFromBoardFailedState) {
             // Navigator.pop(context);
             errorDialog(context: context, text: state.errorMessage);
@@ -180,59 +250,35 @@ class BoardScreen extends StatelessWidget {
                 onRefresh: () async {
                   await allBoardsCubit.refreshData();
                 },
-                child: BoardWidget(
-                  allBoardsCubit: allBoardsCubit,
-                  addBoardCubit: addBoardCubit,
-                  favoriteCubit: favoriteCubit,
-                  currentBoard: Board(
-                      id: 1,
-                      uuid: '1',
-                      parentId: null,
-                      userId: 1,
-                      language: Language(
-                          id: 1, name: 'english', code: 'en', direction: 'lr'),
-                      roleInBoard: 'admin',
-                      color: colorToHex(const Color.fromARGB(255, 27, 27, 27)),
-                      tasksCommentsCount: 0,
-                      shareLink: '',
-                      title: 'First Group',
-                      description: 'This group has many files to edit',
-                      icon: '',
-                      hasImage: false,
-                      isFavorite: false,
-                      image: '',
-                      visibility: '',
-                      createdAt: DateTime.now(),
-                      children: [],
-                      members: [
-                        Member(
-                            id: 1,
-                            country: Country(
-                                id: 1,
-                                name: 'damascus',
-                                iso3: '+963',
-                                code: '123'),
-                            language: Language(
-                                id: 1,
-                                name: 'english',
-                                code: 'en',
-                                direction: 'lr'),
-                            gender: Gender(id: 1, type: 'male'),
-                            firstName: 'Alaa',
-                            lastName: 'Shibany',
-                            mainRole: 'admin',
-                            role: 'admin',
-                            dateOfBirth: '2002-11-28',
-                            countryCode: '+963',
-                            phone: '981233473',
-                            email: 'alaashibany@gmail.com',
-                            image: '')
-                      ],
-                      invitedUsers: []),
-                  currentIndex: 0,
-                ).animate().fade(
-                      duration: const Duration(milliseconds: 500),
-                    ),
+                child: Statics.isPlatformDesktop
+                    ? Wrap(
+                        children: List.generate(
+                          allBoardsCubit.allBoards.length,
+                          (index) => BoardWidget(
+                            allBoardsCubit: allBoardsCubit,
+                            addBoardCubit: addBoardCubit,
+                            favoriteCubit: favoriteCubit,
+                            currentBoard: allBoardsCubit.allBoards[index],
+                            currentIndex: 0,
+                          ).animate().fade(
+                                duration: const Duration(milliseconds: 500),
+                              ),
+                        ),
+                      )
+                    : ListView(
+                        children: List.generate(
+                          allBoardsCubit.allBoards.length,
+                          (index) => BoardWidget(
+                            allBoardsCubit: allBoardsCubit,
+                            addBoardCubit: addBoardCubit,
+                            favoriteCubit: favoriteCubit,
+                            currentBoard: allBoardsCubit.allBoards[index],
+                            currentIndex: 0,
+                          ).animate().fade(
+                                duration: const Duration(milliseconds: 500),
+                              ),
+                        ),
+                      ),
               );
             },
           );

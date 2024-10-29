@@ -6,7 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:files_manager/core/functions/apis_error_handler.dart';
 import 'package:files_manager/models/task_model.dart';
-import 'package:files_manager/models/todo_model.dart';
+import 'package:files_manager/models/file_model.dart';
 
 import '../../core/server/dio_settings.dart';
 import '../../core/shared/connect.dart';
@@ -16,7 +16,7 @@ part 'todo_state.dart';
 
 class TodoCubit extends Cubit<TodoState> {
   TodoCubit(this.todoModel) : super(TodoInitial());
-  TodoModel todoModel;
+  FileModel todoModel;
 
   TextEditingController taskTitleController = TextEditingController();
   TextEditingController taskController = TextEditingController();
@@ -72,8 +72,8 @@ class TodoCubit extends Cubit<TodoState> {
         final List<TaskModel> newTasks =
             jsonData.map((e) => TaskModel.fromJson(e)).toList();
         print('we will emit success');
-        TodoModel todoApp =
-            TodoModel.fromJson(response.data['board_application']);
+        FileModel todoApp =
+            FileModel.fromJson(response.data['board_application']);
         todoModel = todoApp;
         todoModel.tasks.addAll(newTasks);
         emit(TodoSuccessState(

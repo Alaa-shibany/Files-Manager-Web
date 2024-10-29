@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:files_manager/generated/l10n.dart';
 
+// ignore: must_be_immutable
 class SettingsApplicationMenu extends StatelessWidget {
   SettingsApplicationMenu({super.key, required this.onSelected});
   void Function(String)? onSelected;

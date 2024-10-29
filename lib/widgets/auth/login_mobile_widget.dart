@@ -88,14 +88,7 @@ class LoginMobileWidget extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () {
                     if (loginCubit.formKey.currentState!.validate()) {
-                      // BlocProvider.of<LoginCubit>(context).login(
-                      //   context: context,
-                      //   email: emailController.text.toString(),
-                      //   password: passwordController.text.toString(),
-                      // );
-                      Navigator.pushReplacementNamed(
-                          context, '/navigation_screen');
-
+                      Navigator.pushNamed(context, '/navigation_screen');
                       print(loginCubit.emailController.text.toString());
                       print(loginCubit.passwordController.text.toString());
                     }

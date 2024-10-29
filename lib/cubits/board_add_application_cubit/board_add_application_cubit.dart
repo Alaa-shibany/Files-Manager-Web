@@ -2,14 +2,14 @@ import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 
 import 'package:dio/dio.dart' as Dio;
+import 'package:files_manager/models/file_model.dart';
 import 'package:flutter/material.dart';
 import 'package:files_manager/core/functions/apis_error_handler.dart';
 import 'package:files_manager/core/server/dio_settings.dart';
 import 'package:files_manager/core/shared/local_network.dart';
 import 'package:files_manager/interfaces/applications_abstract.dart';
 
-import '../../models/chat_model.dart';
-import '../../models/todo_model.dart';
+import '../../models/folder_model.dart';
 
 part 'board_add_application_state.dart';
 
@@ -39,12 +39,12 @@ class BoardAddApplicationCubit extends Cubit<BoardAddApplicationState> {
       if (response.statusCode == 200) {
         Application createdApplication;
         if (appId == 1) {
-          TodoModel todo =
-              TodoModel.fromJson(response.data['board_application']);
+          FileModel todo =
+              FileModel.fromJson(response.data['board_application']);
           createdApplication = todo;
         } else {
-          ChatModel chat =
-              ChatModel.fromJson(response.data['board_application']);
+          FolderModel chat =
+              FolderModel.fromJson(response.data['board_application']);
           createdApplication = chat;
         }
         emit(BoardAddApplicationSuccess(addedApplication: createdApplication));

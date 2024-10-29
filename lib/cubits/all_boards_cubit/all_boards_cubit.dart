@@ -2,20 +2,172 @@ import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 
 import 'package:dio/dio.dart' as Dio;
+import 'package:files_manager/models/folder_model.dart';
+import 'package:files_manager/models/file_model.dart';
 import 'package:flutter/material.dart';
 import 'package:files_manager/core/functions/apis_error_handler.dart';
 import 'package:files_manager/core/server/dio_settings.dart';
 import 'package:files_manager/models/board_model.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
+import '../../core/functions/color_to_hex.dart';
 import '../../core/shared/connect.dart';
 import '../../core/shared/local_network.dart';
+import '../../models/member_model.dart';
+import '../../models/user_model.dart';
 
 part 'all_boards_state.dart';
 
 class AllBoardsCubit extends Cubit<AllBoardsState> {
   AllBoardsCubit() : super(AllBoardsInitial());
-  List<Board> allBoards = [];
+  List<Board> allBoards = [
+    Board(
+        id: 1,
+        uuid: '1',
+        parentId: null,
+        userId: 1,
+        allFiles: [
+          FileModel(
+              id: 1,
+              boardId: 1,
+              title: 'File one',
+              mode: 'open',
+              createdAt: DateTime.now(),
+              updatedAt: DateTime.now()),
+          FileModel(
+              id: 2,
+              boardId: 1,
+              title: 'File two',
+              mode: 'open',
+              createdAt: DateTime.now(),
+              updatedAt: DateTime.now()),
+          FolderModel(
+            id: 1,
+            boardId: 1,
+            title: 'Folder one',
+            mode: 'open',
+            allFiles: [],
+            createdAt: DateTime.now(),
+            updatedAt: DateTime.now(),
+          )
+        ],
+        language: Language(id: 1, name: 'english', code: 'en', direction: 'lr'),
+        roleInBoard: 'admin',
+        color: colorToHex(const Color.fromARGB(255, 27, 27, 27)),
+        tasksCommentsCount: 0,
+        shareLink: '',
+        title: 'First Group',
+        description: 'This group has many files to edit',
+        icon: '\u{263A}',
+        hasImage: false,
+        isFavorite: false,
+        image: '',
+        visibility: '',
+        createdAt: DateTime.now(),
+        children: [],
+        members: [
+          Member(
+              id: 1,
+              country:
+                  Country(id: 1, name: 'damascus', iso3: '+963', code: '123'),
+              language:
+                  Language(id: 1, name: 'english', code: 'en', direction: 'lr'),
+              gender: Gender(id: 1, type: 'male'),
+              firstName: 'Alaa',
+              lastName: 'Shibany',
+              mainRole: 'admin',
+              role: 'admin',
+              dateOfBirth: '2002-11-28',
+              countryCode: '+963',
+              phone: '981233473',
+              email: 'alaashibany@gmail.com',
+              image: '')
+        ],
+        invitedUsers: []),
+    Board(
+        id: 2,
+        uuid: '2',
+        parentId: null,
+        userId: 1,
+        allFiles: [],
+        language: Language(id: 1, name: 'english', code: 'en', direction: 'lr'),
+        roleInBoard: 'admin',
+        color: colorToHex(const Color.fromARGB(255, 27, 27, 27)),
+        tasksCommentsCount: 0,
+        shareLink: '',
+        title: 'New Group',
+        description: '',
+        icon: '\u{263A}',
+        hasImage: false,
+        isFavorite: false,
+        image: '',
+        visibility: '',
+        createdAt: DateTime.now(),
+        children: [],
+        members: [
+          Member(
+              id: 1,
+              country:
+                  Country(id: 1, name: 'damascus', iso3: '+963', code: '123'),
+              language:
+                  Language(id: 1, name: 'english', code: 'en', direction: 'lr'),
+              gender: Gender(id: 1, type: 'male'),
+              firstName: 'Alaa',
+              lastName: 'Shibany',
+              mainRole: 'admin',
+              role: 'admin',
+              dateOfBirth: '2002-11-28',
+              countryCode: '+963',
+              phone: '981233473',
+              email: 'alaashibany@gmail.com',
+              image: '')
+        ],
+        invitedUsers: []),
+  ];
+
+  Future<void> addBoard() async {
+    allBoards.add(Board(
+        id: allBoards.last.id + 1,
+        uuid: '2',
+        parentId: null,
+        userId: 1,
+        allFiles: [],
+        language: Language(id: 1, name: 'english', code: 'en', direction: 'lr'),
+        roleInBoard: 'admin',
+        color: colorToHex(const Color.fromARGB(255, 27, 27, 27)),
+        tasksCommentsCount: 0,
+        shareLink: '',
+        title: 'New Group',
+        description: '',
+        icon: '\u{263A}',
+        hasImage: false,
+        isFavorite: false,
+        image: '',
+        visibility: '',
+        createdAt: DateTime.now(),
+        children: [],
+        members: [
+          Member(
+              id: 1,
+              country:
+                  Country(id: 1, name: 'damascus', iso3: '+963', code: '123'),
+              language:
+                  Language(id: 1, name: 'english', code: 'en', direction: 'lr'),
+              gender: Gender(id: 1, type: 'male'),
+              firstName: 'Alaa',
+              lastName: 'Shibany',
+              mainRole: 'admin',
+              role: 'admin',
+              dateOfBirth: '2002-11-28',
+              countryCode: '+963',
+              phone: '981233473',
+              email: 'alaashibany@gmail.com',
+              image: '')
+        ],
+        invitedUsers: []));
+    emit(AllBoardsInitial());
+  }
+
   final int pageSize = 10;
   PagingController<int, Board> pagingController =
       PagingController(firstPageKey: 1);
@@ -47,8 +199,11 @@ class AllBoardsCubit extends Cubit<AllBoardsState> {
     emit(AllBoardsInitial());
   }
 
-  Future<void> removeBoard({required int index}) async {
-    pagingController.itemList!.removeAt(index);
+  Future<void> removeBoard({required int index, required int id}) async {
+    if (pagingController.itemList != null) {
+      pagingController.itemList!.removeAt(index);
+    }
+    allBoards.removeWhere((e) => e.id == id);
     refresh();
   }
 

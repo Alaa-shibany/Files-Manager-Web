@@ -14,7 +14,7 @@ import 'package:files_manager/core/functions/apis_error_handler.dart';
 import 'package:files_manager/core/server/dio_settings.dart';
 import 'package:files_manager/core/shared/connect.dart';
 import 'package:files_manager/core/shared/local_network.dart';
-import 'package:files_manager/models/chat_model.dart';
+import 'package:files_manager/models/folder_model.dart';
 import 'package:record/record.dart';
 import 'package:path_provider/path_provider.dart';
 // import 'package:audioplayers/audioplayers.dart';
@@ -23,7 +23,7 @@ part 'chat_state.dart';
 
 class ChatCubit extends Cubit<ChatState> {
   ChatCubit(this.chatModel) : super(ChatInitial());
-  final ChatModel chatModel;
+  final FolderModel chatModel;
   TextEditingController taskTitleController = TextEditingController();
 
   List<String> messages = [];
@@ -329,7 +329,6 @@ class ChatCubit extends Cubit<ChatState> {
           reply: null,
           isFormAPi: null);
       print('Adding the message');
-      chatModel.allMessages.insert(0, newMessage);
       pagingController.itemList!.insert(0, newMessage);
       String message = messageController.text;
       messageController = TextEditingController();
@@ -386,7 +385,6 @@ class ChatCubit extends Cubit<ChatState> {
           reply: null,
           isFormAPi: null);
       print('Adding the message');
-      chatModel.allMessages.insert(0, newMessage);
       pagingController.itemList!.insert(0, newMessage);
       String message = messageController.text;
       messageController = TextEditingController();
@@ -442,7 +440,6 @@ class ChatCubit extends Cubit<ChatState> {
           reply: null,
           isFormAPi: null);
       print('Adding the message');
-      chatModel.allMessages.insert(0, newMessage);
       pagingController.itemList!.insert(0, newMessage);
       String message = messageController.text;
       messageController = TextEditingController();
@@ -494,7 +491,6 @@ class ChatCubit extends Cubit<ChatState> {
         reply: null,
         isFormAPi: null);
     print('Adding the message');
-    chatModel.allMessages.insert(0, newMessage);
     pagingController.itemList!.insert(
       0,
       newMessage,
@@ -596,7 +592,6 @@ class ChatCubit extends Cubit<ChatState> {
         reply: null,
         isFormAPi: null);
     print('Adding the message');
-    chatModel.allMessages.insert(0, newMessage);
     pagingController.itemList!.insert(0, newMessage);
     String message = messageController.text;
     messageController = TextEditingController();

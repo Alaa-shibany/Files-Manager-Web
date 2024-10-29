@@ -14,8 +14,6 @@ import 'package:files_manager/generated/l10n.dart';
 import 'package:files_manager/screens/add_board_screen/sub_board_screen.dart';
 import 'package:files_manager/screens/all_applications_screen/all_applications_screen.dart';
 import 'package:files_manager/widgets/applications_widgets/show_applications_data.dart';
-import 'package:files_manager/widgets/helper/no_data.dart';
-import 'package:files_manager/widgets/home/board_card.dart';
 import '../../core/animation/dialogs/expired_dialog.dart';
 import '../../core/shared/local_network.dart';
 import '../../cubits/board_settings_cubit/board_settings_cubit.dart';
@@ -185,15 +183,6 @@ class AddBoardScreen extends StatelessWidget {
                                 },
                               ),
                             ],
-                            bottom: TabBar(
-                              onTap: (int index) async {
-                                boardCubit.changeSelectedTap(index);
-                              },
-                              tabs: [
-                                Tab(text: 'Folders and Files'),
-                                // Tab(text: S.of(context).subpanels),
-                              ],
-                            ),
                           ),
                           body: TabBarView(
                             children: [

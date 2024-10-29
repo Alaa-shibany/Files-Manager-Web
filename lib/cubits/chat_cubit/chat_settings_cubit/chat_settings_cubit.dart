@@ -19,7 +19,6 @@ class ChatSettingsCubit extends Cubit<ChatSettingsState> {
   String? chatLanguageCode;
 
   Future<void> changeLanguage({required String lang}) async {
-    chatCubit.chatModel.langChatApp = lang;
     emit(ChatSettingsInitial());
     await chatCubit.refresh();
   }

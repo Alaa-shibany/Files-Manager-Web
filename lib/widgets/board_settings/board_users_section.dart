@@ -1,7 +1,5 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:files_manager/cubits/add_member_cubit/add_member_cubit.dart';
 import 'package:files_manager/cubits/board_settings_cubit/board_settings_cubit.dart';
 import 'package:files_manager/generated/l10n.dart';
@@ -11,6 +9,8 @@ import 'package:files_manager/screens/add_member_screen/update_member_screen.dar
 import 'package:files_manager/theme/color.dart';
 import 'package:files_manager/widgets/custom_text_fields/custom_text_field.dart';
 import 'package:files_manager/widgets/helper/no_data.dart';
+
+import '../../core/functions/statics.dart';
 
 class BoardUsersSection extends StatelessWidget {
   const BoardUsersSection(
@@ -195,63 +195,50 @@ class BoardUsersSection extends StatelessWidget {
     return Stack(
       clipBehavior: Clip.none,
       children: [
-        (userImage!.isEmpty || userImage == '')
-            ? Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: mediaQuery.width / 30,
-                  vertical: mediaQuery.height / 40,
-                ),
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.blueAccent,
-                ),
-                child: Text(
-                  memberName[0],
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              )
-            : ClipOval(
-                child: CachedNetworkImage(
-                  imageUrl: userImage,
-                  placeholder: (context, url) => Shimmer.fromColors(
-                    baseColor: Colors.grey[300]!,
-                    highlightColor: Colors.grey[100]!,
-                    child: Container(
-                      width: mediaQuery.width / 8, // Adjust the size as needed
-                      height: mediaQuery.width / 8, // Adjust the size as needed
-                      color: Colors.white,
-                    ),
-                  ),
-                  errorWidget: (context, url, error) => const Icon(Icons.error),
-                  fit: BoxFit.cover,
-                  width: mediaQuery.width / 8, // Adjust the size as needed
-                  height: mediaQuery.width / 8, // Adjust the size as needed
-                ),
+        Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: Statics.isPlatformDesktop
+                ? mediaQuery.width / 100
+                : mediaQuery.width / 30,
+            vertical: Statics.isPlatformDesktop
+                ? mediaQuery.width / 150
+                : mediaQuery.height / 80,
+          ),
+          decoration: const BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.blueAccent,
+          ),
+          child: Text(
+            memberName[0],
+            style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: Statics.isPlatformDesktop
+                    ? mediaQuery.width / 60
+                    : mediaQuery.width / 30),
+          ),
+        ),
+        if (role == 'admin')
+          Positioned(
+            bottom: Statics.isPlatformDesktop ? 10 : -5,
+            right: -mediaQuery.width / 90,
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                  horizontal: mediaQuery.width / 120,
+                  vertical: mediaQuery.height / 130),
+              decoration: const BoxDecoration(
+                color: AppColors.primaryColor,
+                shape: BoxShape.circle,
               ),
-        role == null
-            ? const SizedBox()
-            : role == 'admin'
-                ? Positioned(
-                    bottom: 10,
-                    right: -mediaQuery.width / 90,
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: mediaQuery.width / 200,
-                          vertical: mediaQuery.height / 300),
-                      decoration: const BoxDecoration(
-                        color: AppColors.primaryColor,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        Icons.star,
-                        color: Colors.white,
-                        size: mediaQuery.width / 33,
-                      ),
-                    ))
-                : const SizedBox(),
+              child: Icon(
+                Icons.star,
+                color: Colors.white,
+                size: Statics.isPlatformDesktop
+                    ? mediaQuery.width / 120
+                    : mediaQuery.width / 30,
+              ),
+            ),
+          ),
       ],
     );
   }

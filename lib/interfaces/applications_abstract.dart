@@ -12,6 +12,10 @@ abstract class Application {
     return 'application';
   }
 
+  bool isFolder() {
+    return false;
+  }
+
   String getLanguage() {
     return 'en';
   }
