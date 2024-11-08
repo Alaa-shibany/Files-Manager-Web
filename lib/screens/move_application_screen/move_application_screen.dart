@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:files_manager/core/functions/statics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -45,12 +46,14 @@ class MoveApplicationScreen extends StatelessWidget {
         title: SizedBox(
           width: mediaQuery.width / 1.3,
           child: Text(
-            isCopy ? 'نسخ التطبيق إلى' : 'نقل التطبيق إلى',
-            textAlign: TextAlign.end,
+            isCopy ? 'نسخ التطبيق إلى' : 'مشاركة الملفات',
+            textAlign: TextAlign.start,
             style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
-                fontSize: mediaQuery.width / 15),
+                fontSize: Statics.isPlatformDesktop
+                    ? mediaQuery.width / 45
+                    : mediaQuery.width / 15),
           ),
         ),
         centerTitle: true,
@@ -85,10 +88,9 @@ class MoveApplicationScreen extends StatelessWidget {
                 height: mediaQuery.height / 1.5,
                 child: ListView(
                   children: List.generate(
-                    allBoardsCubit.pagingController.itemList!.length,
+                    allBoardsCubit.allBoards.length,
                     (index) {
-                      return allBoardsCubit
-                                  .pagingController.itemList![index].id ==
+                      return allBoardsCubit.allBoards[index].id ==
                               boardCubit.currentBoard.id
                           ? const SizedBox()
                           : Card(
@@ -109,12 +111,9 @@ class MoveApplicationScreen extends StatelessWidget {
                                             SizedBox(
                                               height: mediaQuery.height / 20,
                                               child: allBoardsCubit
-                                                      .pagingController
-                                                      .itemList![index]
-                                                      .hasImage
+                                                      .allBoards[index].hasImage
                                                   ? allBoardsCubit
-                                                          .pagingController
-                                                          .itemList![index]
+                                                          .allBoards[index]
                                                           .image
                                                           .isEmpty
                                                       ? ClipRRect(
@@ -124,18 +123,18 @@ class MoveApplicationScreen extends StatelessWidget {
                                                                       360),
                                                           child: Image.file(
                                                             allBoardsCubit
-                                                                .pagingController
-                                                                .itemList![
+                                                                .allBoards[
                                                                     index]
                                                                 .imageFile!,
                                                             fit: BoxFit.contain,
                                                           ),
                                                         )
                                                       : CachedNetworkImage(
-                                                          imageUrl: allBoardsCubit
-                                                              .pagingController
-                                                              .itemList![index]
-                                                              .image,
+                                                          imageUrl:
+                                                              allBoardsCubit
+                                                                  .allBoards[
+                                                                      index]
+                                                                  .image,
                                                           placeholder: (context,
                                                                   url) =>
                                                               Shimmer
@@ -158,8 +157,7 @@ class MoveApplicationScreen extends StatelessWidget {
                                                         )
                                                   : CircleAvatar(
                                                       child: Text(allBoardsCubit
-                                                          .pagingController
-                                                          .itemList![index]
+                                                          .allBoards[index]
                                                           .icon),
                                                     ),
                                             ),
@@ -169,26 +167,10 @@ class MoveApplicationScreen extends StatelessWidget {
                                               children: [
                                                 Text(
                                                   allBoardsCubit
-                                                      .pagingController
-                                                      .itemList![index]
-                                                      .title,
+                                                      .allBoards[index].title,
                                                   style: const TextStyle(
                                                     color: AppColors.dark,
                                                     fontSize: 18,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                                Text(
-                                                  allBoardsCubit
-                                                              .pagingController
-                                                              .itemList![index]
-                                                              .parentId !=
-                                                          null
-                                                      ? '(لوحة فرعية)'
-                                                      : '(لوحة رئيسية)',
-                                                  style: const TextStyle(
-                                                    color: Colors.white24,
-                                                    fontSize: 12,
                                                     fontWeight: FontWeight.bold,
                                                   ),
                                                 ),

@@ -5,7 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../cubits/add_board_cubit/add_board_cubit.dart';
+import '../../cubits/all_boards_cubit/all_boards_cubit.dart';
+import '../../cubits/leave_from_board_cubit/leave_from_board_cubit.dart';
 import '../../generated/l10n.dart';
+import '../../screens/home/board_screen.dart';
 import '../custom_text_fields/custom_text_field.dart';
 
 class LoginMobileWidget extends StatelessWidget {
@@ -88,7 +92,31 @@ class LoginMobileWidget extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () {
                     if (loginCubit.formKey.currentState!.validate()) {
-                      Navigator.pushNamed(context, '/navigation_screen');
+                      // BlocProvider.of<LoginCubit>(context).login(
+                      //   context: context,
+                      //   email: emailController.text.toString(),
+                      //   password: passwordController.text.toString(),
+                      // );
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MultiBlocProvider(
+                              providers: [
+                                BlocProvider(
+                                  create: (context) => AllBoardsCubit()
+                                    ..initState(context: context),
+                                ),
+                                BlocProvider(
+                                  create: (context) => LeaveFromBoardCubit(),
+                                ),
+                                BlocProvider(
+                                  create: (context) => AddBoardCubit(),
+                                ),
+                              ],
+                              child: const BoardScreen(),
+                            ),
+                          ));
+
                       print(loginCubit.emailController.text.toString());
                       print(loginCubit.passwordController.text.toString());
                     }

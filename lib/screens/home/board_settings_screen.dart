@@ -12,7 +12,6 @@ import 'package:files_manager/cubits/locale_cubit/locale_cubit.dart';
 import 'package:files_manager/generated/l10n.dart';
 
 import 'package:files_manager/theme/color.dart';
-import 'package:files_manager/widgets/board_settings/board_privacy_section.dart';
 import 'package:files_manager/widgets/board_settings/board_settings_section.dart';
 import 'package:files_manager/widgets/board_settings/board_users_section.dart';
 import 'package:files_manager/widgets/custom_text_fields/custom_text_fields.dart';
@@ -142,16 +141,6 @@ class BoardSettingsScreen extends StatelessWidget {
                                     : mediaQuery.width / 30,
                               ),
                             ),
-                            Tab(
-                              text: S.of(context).privacy,
-                              icon: Icon(
-                                Icons.visibility,
-                                color: Colors.white,
-                                size: Statics.isPlatformDesktop
-                                    ? mediaQuery.width / 50
-                                    : mediaQuery.width / 30,
-                              ),
-                            ),
                           ],
                   ),
                 ),
@@ -174,10 +163,6 @@ class BoardSettingsScreen extends StatelessWidget {
                             BoardUsersSection(
                                 mediaQuery: mediaQuery,
                                 boardSettingsCubit: boardSettingsCubit),
-                            BoardPrivacySection(
-                              boardSettingsCubit: boardSettingsCubit,
-                              mediaQuery: mediaQuery,
-                            ),
                           ],
                         ),
                 ),

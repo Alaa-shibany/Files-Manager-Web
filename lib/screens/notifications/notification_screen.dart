@@ -5,12 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:files_manager/core/animation/dialogs/expired_dialog.dart';
 import 'package:files_manager/core/shared/local_network.dart';
-import 'package:files_manager/core/shimmer/notification_shimmer.dart';
 import 'package:files_manager/cubits/notification_cubit/notification_cubit.dart';
 import 'package:files_manager/generated/l10n.dart';
 import 'package:files_manager/theme/color.dart';
 import 'package:files_manager/widgets/home/custom_appbar.dart';
-import 'package:files_manager/widgets/notification/no_notification.dart';
 import 'package:files_manager/widgets/notification/notification_card.dart';
 import '../../core/animation/dialogs/dialogs.dart';
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:files_manager/theme/color.dart';
 
+// ignore: must_be_immutable
 class CustomFormTextField extends StatelessWidget {
   CustomFormTextField(
       {super.key,

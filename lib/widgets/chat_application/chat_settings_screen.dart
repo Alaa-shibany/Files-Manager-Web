@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:files_manager/core/functions/color_to_hex.dart';
 import 'package:files_manager/cubits/chat_cubit/chat_cubit.dart';
 import 'package:files_manager/cubits/chat_cubit/chat_settings_cubit/chat_settings_cubit.dart';
-import 'package:files_manager/cubits/locale_cubit/locale_cubit.dart';
 import 'package:files_manager/generated/l10n.dart';
 import 'package:files_manager/theme/color.dart';
 import 'package:files_manager/widgets/custom_text_fields/custom_text_fields.dart';
@@ -16,7 +15,6 @@ class ChatSettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context).size;
     final chatSettingsCubit = context.read<ChatSettingsCubit>();
-    final localCubit = context.read<LocaleCubit>();
 
     return BlocBuilder<ChatSettingsCubit, ChatSettingsState>(
       builder: (context, state) {
