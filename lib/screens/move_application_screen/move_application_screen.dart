@@ -3,20 +3,15 @@ import 'package:files_manager/core/functions/statics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_phoenix/flutter_phoenix.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
 import 'package:shimmer/shimmer.dart';
-import 'package:files_manager/core/animation/dialogs/expired_dialog.dart';
-import 'package:files_manager/core/shared/local_network.dart';
+
 import 'package:files_manager/cubits/all_boards_cubit/all_boards_cubit.dart';
 import 'package:files_manager/cubits/application_cubit/application_cubit.dart';
 import 'package:files_manager/cubits/board_cubit/board_cubit.dart';
 import 'package:files_manager/cubits/move_application_cubit/move_application_cubit.dart';
 import 'package:files_manager/interfaces/applications_abstract.dart';
 import 'package:files_manager/theme/color.dart';
-
-import '../../core/animation/dialogs/dialogs.dart';
 
 class MoveApplicationScreen extends StatelessWidget {
   const MoveApplicationScreen(
@@ -46,8 +41,8 @@ class MoveApplicationScreen extends StatelessWidget {
         title: SizedBox(
           width: mediaQuery.width / 1.3,
           child: Text(
-            isCopy ? 'نسخ التطبيق إلى' : 'مشاركة الملفات',
-            textAlign: TextAlign.start,
+            isCopy ? 'Copy application to' : 'Share application',
+            textAlign: TextAlign.end,
             style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -86,159 +81,277 @@ class MoveApplicationScreen extends StatelessWidget {
                   : const SizedBox(),
               SizedBox(
                 height: mediaQuery.height / 1.5,
-                child: ListView(
-                  children: List.generate(
-                    allBoardsCubit.allBoards.length,
-                    (index) {
-                      return allBoardsCubit.allBoards[index].id ==
-                              boardCubit.currentBoard.id
-                          ? const SizedBox()
-                          : Card(
-                              margin: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 5),
-                              child: Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          mainAxisSize: MainAxisSize.min,
+                width: mediaQuery.width,
+                child: Statics.isPlatformDesktop
+                    ? Wrap(
+                        alignment: WrapAlignment.start,
+                        children: List.generate(
+                          allBoardsCubit.allBoards.length,
+                          (index) {
+                            return allBoardsCubit.allBoards[index].id ==
+                                    boardCubit.currentBoard.id
+                                ? const SizedBox()
+                                : SizedBox(
+                                    width: mediaQuery.width / 3,
+                                    child: Card(
+                                      margin: const EdgeInsets.symmetric(
+                                          horizontal: 10, vertical: 5),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
-                                            SizedBox(
-                                              height: mediaQuery.height / 20,
-                                              child: allBoardsCubit
-                                                      .allBoards[index].hasImage
-                                                  ? allBoardsCubit
-                                                          .allBoards[index]
-                                                          .image
-                                                          .isEmpty
-                                                      ? ClipRRect(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      360),
-                                                          child: Image.file(
-                                                            allBoardsCubit
-                                                                .allBoards[
-                                                                    index]
-                                                                .imageFile!,
-                                                            fit: BoxFit.contain,
-                                                          ),
-                                                        )
-                                                      : CachedNetworkImage(
-                                                          imageUrl:
-                                                              allBoardsCubit
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    SizedBox(
+                                                      height:
+                                                          mediaQuery.height /
+                                                              20,
+                                                      child: allBoardsCubit
+                                                              .allBoards[index]
+                                                              .hasImage
+                                                          ? allBoardsCubit
                                                                   .allBoards[
                                                                       index]
-                                                                  .image,
-                                                          placeholder: (context,
-                                                                  url) =>
-                                                              Shimmer
-                                                                  .fromColors(
-                                                            baseColor: Colors
-                                                                .grey[300]!,
-                                                            highlightColor:
-                                                                Colors
-                                                                    .grey[100]!,
-                                                            child: Container(
-                                                              color:
-                                                                  Colors.white,
+                                                                  .image
+                                                                  .isEmpty
+                                                              ? ClipRRect(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              360),
+                                                                  child: Image
+                                                                      .file(
+                                                                    allBoardsCubit
+                                                                        .allBoards[
+                                                                            index]
+                                                                        .imageFile!,
+                                                                    fit: BoxFit
+                                                                        .contain,
+                                                                  ),
+                                                                )
+                                                              : CachedNetworkImage(
+                                                                  imageUrl: allBoardsCubit
+                                                                      .allBoards[
+                                                                          index]
+                                                                      .image,
+                                                                  placeholder: (context,
+                                                                          url) =>
+                                                                      Shimmer
+                                                                          .fromColors(
+                                                                    baseColor:
+                                                                        Colors.grey[
+                                                                            300]!,
+                                                                    highlightColor:
+                                                                        Colors.grey[
+                                                                            100]!,
+                                                                    child:
+                                                                        Container(
+                                                                      color: Colors
+                                                                          .white,
+                                                                    ),
+                                                                  ),
+                                                                  errorWidget: (context,
+                                                                          url,
+                                                                          error) =>
+                                                                      const Icon(
+                                                                          Icons
+                                                                              .error),
+                                                                  fit: BoxFit
+                                                                      .contain,
+                                                                )
+                                                          : CircleAvatar(
+                                                              child: Text(
+                                                                  allBoardsCubit
+                                                                      .allBoards[
+                                                                          index]
+                                                                      .icon),
                                                             ),
-                                                          ),
-                                                          errorWidget: (context,
-                                                                  url, error) =>
-                                                              const Icon(
-                                                                  Icons.error),
-                                                          fit: BoxFit.contain,
-                                                        )
-                                                  : CircleAvatar(
-                                                      child: Text(allBoardsCubit
-                                                          .allBoards[index]
-                                                          .icon),
                                                     ),
-                                            ),
-                                            const SizedBox(width: 10),
-                                            Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                Text(
-                                                  allBoardsCubit
-                                                      .allBoards[index].title,
-                                                  style: const TextStyle(
-                                                    color: AppColors.dark,
-                                                    fontSize: 18,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
+                                                    const SizedBox(width: 10),
+                                                    Column(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        Text(
+                                                          allBoardsCubit
+                                                              .allBoards[index]
+                                                              .title,
+                                                          style:
+                                                              const TextStyle(
+                                                            color:
+                                                                AppColors.dark,
+                                                            fontSize: 18,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                                Radio(
+                                                  value: allBoardsCubit
+                                                      .allBoards[index].id,
+                                                  groupValue:
+                                                      moveApplicationCubit
+                                                          .selectedBoard,
+                                                  onChanged: (value) async {
+                                                    moveApplicationCubit
+                                                        .selectBoard(value!);
+                                                  },
                                                 ),
                                               ],
                                             ),
                                           ],
                                         ),
-                                        Radio(
-                                          value: allBoardsCubit.pagingController
-                                              .itemList![index].id,
-                                          groupValue: moveApplicationCubit
-                                              .selectedBoard,
-                                          onChanged: (value) async {
-                                            moveApplicationCubit
-                                                .selectBoard(value!);
-                                          },
-                                        ),
-                                      ],
+                                      ),
+                                    ).animate().fade(
+                                        duration:
+                                            const Duration(milliseconds: 500)),
+                                  );
+                          },
+                        ),
+                      )
+                    : ListView(
+                        children: List.generate(
+                          allBoardsCubit.allBoards.length,
+                          (index) {
+                            return allBoardsCubit.allBoards[index].id ==
+                                    boardCubit.currentBoard.id
+                                ? const SizedBox()
+                                : Card(
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 5),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  SizedBox(
+                                                    height:
+                                                        mediaQuery.height / 20,
+                                                    child: allBoardsCubit
+                                                            .allBoards[index]
+                                                            .hasImage
+                                                        ? allBoardsCubit
+                                                                .allBoards[
+                                                                    index]
+                                                                .image
+                                                                .isEmpty
+                                                            ? ClipRRect(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            360),
+                                                                child:
+                                                                    Image.file(
+                                                                  allBoardsCubit
+                                                                      .allBoards[
+                                                                          index]
+                                                                      .imageFile!,
+                                                                  fit: BoxFit
+                                                                      .contain,
+                                                                ),
+                                                              )
+                                                            : CachedNetworkImage(
+                                                                imageUrl:
+                                                                    allBoardsCubit
+                                                                        .allBoards[
+                                                                            index]
+                                                                        .image,
+                                                                placeholder: (context,
+                                                                        url) =>
+                                                                    Shimmer
+                                                                        .fromColors(
+                                                                  baseColor:
+                                                                      Colors.grey[
+                                                                          300]!,
+                                                                  highlightColor:
+                                                                      Colors.grey[
+                                                                          100]!,
+                                                                  child:
+                                                                      Container(
+                                                                    color: Colors
+                                                                        .white,
+                                                                  ),
+                                                                ),
+                                                                errorWidget: (context,
+                                                                        url,
+                                                                        error) =>
+                                                                    const Icon(Icons
+                                                                        .error),
+                                                                fit: BoxFit
+                                                                    .contain,
+                                                              )
+                                                        : CircleAvatar(
+                                                            child: Text(
+                                                                allBoardsCubit
+                                                                    .allBoards[
+                                                                        index]
+                                                                    .icon),
+                                                          ),
+                                                  ),
+                                                  const SizedBox(width: 10),
+                                                  Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      Text(
+                                                        allBoardsCubit
+                                                            .allBoards[index]
+                                                            .title,
+                                                        style: const TextStyle(
+                                                          color: AppColors.dark,
+                                                          fontSize: 18,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                              Radio(
+                                                value: allBoardsCubit
+                                                    .allBoards[index].id,
+                                                groupValue: moveApplicationCubit
+                                                    .selectedBoard,
+                                                onChanged: (value) async {
+                                                  moveApplicationCubit
+                                                      .selectBoard(value!);
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ],
-                                ),
-                              ),
-                            ).animate().fade(
-                              duration: const Duration(milliseconds: 500));
-                    },
-                  ),
-                ),
+                                  ).animate().fade(
+                                    duration:
+                                        const Duration(milliseconds: 500));
+                          },
+                        ),
+                      ),
               ),
               BlocConsumer<MoveApplicationCubit, MoveApplicationState>(
-                listener: (context, state) {
-                  if (state is MoveApplicationLoadingState) {
-                    loadingDialog(
-                        context: context,
-                        mediaQuery: mediaQuery,
-                        title: state.loadingMessage);
-                  } else if (state is MoveApplicationSuccessState) {
-                    applicationCubit.pagingController.itemList!.removeWhere(
-                      (element) {
-                        return element.getApplicationId() ==
-                            application.getApplicationId();
-                      },
-                    );
-                    boardCubit.allApplications.removeWhere(
-                      (element) {
-                        return element.getApplicationId() ==
-                            application.getApplicationId();
-                      },
-                    );
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                    allBoardsCubit.refresh();
-                  } else if (state is CopyApplicationSuccessState) {
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                    allBoardsCubit.refresh();
-                  } else if (state is MoveApplicationFailedState) {
-                    errorDialog(context: context, text: state.errorMessage);
-                  } else if (state is MoveApplicationExpiredState) {
-                    showExpiredDialog(
-                      context: context,
-                      onConfirmBtnTap: () async {
-                        await CashNetwork.clearCash();
-                        await Hive.box('main').clear();
-                        await Phoenix.rebirth(context);
-                      },
-                    );
-                  }
-                },
+                listener: (context, state) {},
                 builder: (context, state) {
                   return Align(
                     alignment: Alignment.center,

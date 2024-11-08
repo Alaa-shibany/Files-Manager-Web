@@ -17,7 +17,7 @@ class MoveApplicationCubit extends Cubit<MoveApplicationState> {
   bool moveWithContent = false;
 
   Future<void> initState() async {
-    selectedBoard = allBoardsCubit.pagingController.itemList!.first.id;
+    selectedBoard = allBoardsCubit.allBoards.first.id;
     emit(MoveApplicationInitial());
   }
 
