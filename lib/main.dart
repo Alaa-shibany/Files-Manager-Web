@@ -1,6 +1,7 @@
-import 'package:files_manager/core/notification/notification_web.dart';
+import 'package:files_manager/core/notification/notification.dart';
 import 'package:files_manager/core/shared/local_network.dart';
 import 'package:files_manager/core/functions/statics.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,11 +21,20 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await CashNetwork.cashInitialization();
-
   await Hive.initFlutter();
   await Hive.openBox('main');
-  final notificationService = NotificationService();
-  await notificationService.listenNotifications();
+  await Firebase.initializeApp(
+    options: const FirebaseOptions(
+        apiKey: "AIzaSyAAIBojjbALrA0QcbWuNU7c6mHbdy6noiU",
+        authDomain: "flutter-1cda7.firebaseapp.com",
+        databaseURL: "https://flutter-1cda7-default-rtdb.firebaseio.com",
+        projectId: "flutter-1cda7",
+        storageBucket: "flutter-1cda7.firebasestorage.app",
+        messagingSenderId: "838693518963",
+        appId: "1:838693518963:web:0f5a0eee9a2a64803eb406",
+        measurementId: "G-JY8BYQKVCK"),
+  );
+  await FirebaseApi().initNotification();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   Bloc.observer = SimpleBlocObserver();
   runApp(

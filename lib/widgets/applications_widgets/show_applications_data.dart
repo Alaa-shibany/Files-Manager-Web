@@ -82,7 +82,8 @@ class ShowApplicationsData extends StatelessWidget {
                                 mediaQuery: mediaQuery,
                                 allBoardsCubit: allBoardsCubit,
                                 boardCubit: boardCubit,
-                                index: index,
+                                currentApplication:
+                                    boardCubit.currentBoard.allFiles[index],
                                 applicationCubit: applicationCubit)
                             : FileWidget(
                                 mediaQuery: mediaQuery,
@@ -103,7 +104,8 @@ class ShowApplicationsData extends StatelessWidget {
                                 mediaQuery: mediaQuery,
                                 allBoardsCubit: allBoardsCubit,
                                 boardCubit: boardCubit,
-                                index: index,
+                                currentApplication:
+                                    boardCubit.currentBoard.allFiles[index],
                                 applicationCubit: applicationCubit)
                             : FileWidget(
                                 mediaQuery: mediaQuery,

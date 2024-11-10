@@ -44,6 +44,7 @@ class CustomTextFields extends StatelessWidget {
         style: styleInput ?? const TextStyle(color: Colors.black),
         decoration: InputDecoration(
           hintText: hintText,
+          hoverColor: const Color.fromARGB(52, 29, 36, 40),
           hintStyle: const TextStyle(color: Colors.transparent),
           labelText: nameLabel,
           labelStyle: styleInput ?? const TextStyle(color: Colors.transparent),
