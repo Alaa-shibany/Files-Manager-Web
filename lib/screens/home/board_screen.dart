@@ -16,8 +16,8 @@ import 'package:files_manager/widgets/home/board_card.dart';
 import 'package:files_manager/widgets/home/custom_appbar.dart';
 import '../../cubits/board_cubit/board_cubit.dart';
 import '../../cubits/leave_from_board_cubit/leave_from_board_cubit.dart';
-
 import '../../theme/color.dart';
+import '../../widgets/theme_toggle_button.dart';
 import '../add_board_screen/add_board_screen.dart';
 
 class BoardScreen extends StatelessWidget {
@@ -101,6 +101,7 @@ class BoardScreen extends StatelessWidget {
           },
         ),
         actions: [
+          ThemeToggleButton(),
           IconButton(
             tooltip: S.of(context).daily_report,
             onPressed: () {
@@ -118,7 +119,7 @@ class BoardScreen extends StatelessWidget {
               ? Row(
                   children: [
                     IconButton(
-                      tooltip: S.of(context).daily_report,
+                      tooltip: S.of(context).notifications,
                       onPressed: () {
                         Navigator.of(context).pushNamed('/report_screen');
                       },
@@ -126,7 +127,7 @@ class BoardScreen extends StatelessWidget {
                           color: Colors.white, size: mediaQuery.width / 50),
                     ),
                     IconButton(
-                      tooltip: S.of(context).daily_report,
+                      tooltip: S.of(context).logout,
                       onPressed: () {
                         // Navigator.of(context).pushNamed('/report_screen');
                       },

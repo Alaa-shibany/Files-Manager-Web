@@ -1,3 +1,4 @@
+import 'package:files_manager/screens/report_screen/admin_report_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:files_manager/cubits/auth/forget_password_cubit/forget_password_cubit.dart';
@@ -23,6 +24,10 @@ import 'package:files_manager/screens/profile_screen/profile_screen.dart';
 import 'package:files_manager/screens/report_screen/report_screen.dart';
 import 'package:files_manager/screens/settings/reset_password_screen/change_password_screen.dart';
 import 'package:files_manager/screens/start/splash_screen.dart';
+
+import '../cubits/file_report_cubit/file_report_cubit.dart';
+import '../cubits/user_report_cubit/user_report_cubit.dart';
+
 
 final Map<String, WidgetBuilder> routes = {
   // ======splash Screen=====//
@@ -81,10 +86,13 @@ final Map<String, WidgetBuilder> routes = {
         child: const ChangePasswordScreen(),
       ),
   // ======Report Screen=====//
-  '/report_screen': (context) => BlocProvider(
-        create: (context) => ReportCubit(),
-        child: const ReportScreen(),
-      ),
+  '/report_screen': (context) => MultiBlocProvider(
+  providers: [
+    BlocProvider(create: (context) => FileReportCubit()..loadFileReportData()),
+    BlocProvider(create: (context) => UserReportCubit()..loadUserReportData()),
+  ],
+  child: AdminReportScreen(),
+),
   //===== privacy and policy Screen =====//
   '/privacy_and_policy': (context) => BlocProvider(
         create: (context) => PolicyCubit(),

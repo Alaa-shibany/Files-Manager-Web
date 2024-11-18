@@ -1,0 +1,7 @@
+enum Process{
+  CHECKIN,
+  CHECKOUT,
+  EDIT,
+  DELETE,
+  DOWNLOAD
+}
